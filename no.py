@@ -141,3 +141,18 @@ def meet(id):
 def profile():
     user = db.session.get(users, int(current_user.get_id()))
     return render_template('profile.html', user=user)
+
+
+
+class meetings(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    owner = db.Column(db.Integer, db.ForeignKey('users.id'))
+    title = db.Column(db.String, nullable=False)
+    date = db.Column(db.DateTime, nullable=False)
+    time = db.Column(db.String, nullable=False)
+    status = db.Column(db.String, nullable=False, default='Запланирована')
+    descr = db.Column(db.Text, nullable=False)
+    members = db.Column(db.LargeBinary)
+
+    def __repr__(self):
+        return '<meetings %r>' % self.id

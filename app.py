@@ -4,11 +4,13 @@ import copy
 
 from flask import Flask, render_template, redirect, request, url_for, jsonify, json, send_from_directory, abort
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 from flask_login import LoginManager, login_user, UserMixin, login_required, current_user, logout_user
 
 import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 
+from data import Data
 
 
 # App
@@ -19,6 +21,8 @@ app.config['SECRET_KEY'] = '8f42a73054b1749f8f58848be5e6502c'
 # DataBase
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data.db'
 db = SQLAlchemy(app)
+migrate = Migrate(app, db)
+
 
 class users(db.Model, UserMixin):
     __tablename__ = 'users'
@@ -28,24 +32,13 @@ class users(db.Model, UserMixin):
     name = db.Column(db.String(40), nullable=False)
     surname = db.Column(db.String(40), nullable=False)
     
+    current_week = db.Column(db.Integer, nullable=False, default=1)
+    current_day = db.Column(db.Integer, nullable=False, default=1)
 
     def __repr__(self):
         return '<users %r>' % self.id
 
 
-class meetings(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    owner = db.Column(db.Integer, db.ForeignKey('users.id'))
-    title = db.Column(db.String, nullable=False)
-    date = db.Column(db.DateTime, nullable=False)
-    time = db.Column(db.String, nullable=False)
-    status = db.Column(db.String, nullable=False, default='Запланирована')
-    descr = db.Column(db.Text, nullable=False)
-    members = db.Column(db.LargeBinary)
-
-    def __repr__(self):
-        return '<meetings %r>' % self.id
-    
 
 # Login
 login_manager = LoginManager(app)

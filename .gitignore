@@ -163,4 +163,24 @@ cython_debug/
 front/fiftypullups/build/
 front/fiftypullups/node_modules/
 .vscode/
+<<<<<<< Updated upstream
 front/fiftypullups/package-lock.json
+=======
+
+
+front/fiftypullups/.pnp
+front/fiftypullups/.pnp.js
+
+front/fiftypullups/coverage
+
+
+front/fiftypullups/.DS_Store
+front/fiftypullups/.env.local
+front/fiftypullups/.env.development.local
+front/fiftypullups/.env.test.local
+front/fiftypullups/.env.production.local
+
+front/fiftypullups/npm-debug.log*
+front/fiftypullups/yarn-debug.log*
+front/fiftypullups/yarn-error.log*
+>>>>>>> Stashed changes
