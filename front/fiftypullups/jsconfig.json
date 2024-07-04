@@ -4,7 +4,8 @@
         "paths": {
             "app/*": ["app/*"],
             "pages/*": ["pages/*"],
-            "shared/*": ["shared/*"]
+            "shared/*": ["shared/*"],
+            "widgets/*": ["widgets/*"]
         }
     }
 }

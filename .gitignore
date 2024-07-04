@@ -163,3 +163,4 @@ cython_debug/
 front/fiftypullups/build/
 front/fiftypullups/node_modules/
 .vscode/
+front/fiftypullups/package-lock.json

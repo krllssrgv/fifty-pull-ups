@@ -27,6 +27,7 @@ class users(db.Model, UserMixin):
     password = db.Column(db.String(30), nullable=False)
     name = db.Column(db.String(40), nullable=False)
     surname = db.Column(db.String(40), nullable=False)
+    
 
     def __repr__(self):
         return '<users %r>' % self.id
