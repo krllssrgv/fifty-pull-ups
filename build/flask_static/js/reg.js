@@ -1,22 +1,82 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Функция блокировки/разблокировки кнопок при пустом/заполненном input
-    function activeOrPassiveButton(form, button) {
-        form.addEventListener('input', () => {
-            if (form.checkValidity()) {
-                button.classList.remove('form__button-block');
-                button.classList.add('form__button-access');
-            } else {
-                button.classList.remove('form__button-access');
-                button.classList.add('form__button-block');
-            };
-        });
-    };
+    const form = document.querySelector('form'),
+          button = document.querySelector('.form__button'),
+          result = document.querySelector('.form__result'),
+
+          emailInput = document.querySelector('[name="email"]'),
+          emailError = document.querySelector('[data-error="email"]'),
+
+          nameInput = document.querySelector('[name="name"]'),
+          nameError = document.querySelector('[data-error="name"]'),
+          
+          surnameInput = document.querySelector('[name="surname"]'),
+          surnameError = document.querySelector('[data-error="surname"]'),
+          
+          passwordInput = document.querySelector('[name="password"]'),
+          passwordError = document.querySelector('[data-error="password"]'),
+          
+          repeatedPasswordInput = document.querySelector('[name="repeatedPassword"]'),
+          repeatedPasswordError = document.querySelector('[data-error="repeatedPassword"]');
+    
+    let checkForm = false;
+
+
+    form.addEventListener('input', (e) => {
+        if (form.checkValidity()) {
+            button.classList.remove('form__button-block');
+            button.classList.add('form__button-access');
+            checkForm = true;
+        } else {
+            button.classList.remove('form__button-access');
+            button.classList.add('form__button-block');
+            checkForm = false;
+        };
+    });
+
 
     // Функция добавления ошибок
     function addErrors(input, inputError) {
         input.classList.add('form__input-incorrect');
         inputError.classList.add('form__inputComment-active');
     };
+
+
+    async function register() {
+        const userData = {
+            'email': emailInput.value,
+            'name': nameInput.value,
+            'surname': surnameInput.value,
+            'password': passwordInput.value,
+            'repeatedPassword': repeatedPasswordInput.value
+        }
+
+        const response = await fetch('', {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify(userData)
+        });
+        
+        if (response.redirected) {
+            result.innerHTML = 'Регистрация завершена!'
+            setTimeout(() => {window.location.href = response.url;}, 70);
+        } else {
+            const json = await response.json();
+            console.log(json);
+        }
+    }
+
+
+    button.addEventListener('click', (e) => {
+        if (checkForm) {
+            register();
+        }
+    })
+
+
+
+    
 
     // Функция очистки ошибок
     function clearErrors(form, inputs, inputErrors) {

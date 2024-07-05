@@ -30,7 +30,6 @@ function clearErrors(form, inputs, inputErrors) {
     });
 };
 
-
 document.addEventListener('DOMContentLoaded', () => {
 
     let logForm = document.querySelector('form'),
