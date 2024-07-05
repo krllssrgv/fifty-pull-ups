@@ -8,25 +8,55 @@
     <title>Аутентификация</title>
 
     <link rel="stylesheet" href="{{ url_for('static', filename='flask_static/css/log.min.css') }}">
+
+    <style>
+        @font-face {
+            font-family: 'Ubuntu-Bold';
+            src: url("{{ url_for('static', filename='flask_static/fonts/Ubuntu-Medium.ttf') }}");
+        }
+
+        @font-face {
+            font-family: 'Ubuntu-Regular';
+            src: url("{{ url_for('static', filename='flask_static/fonts/Ubuntu-Regular.ttf') }}");
+        }
+
+        @font-face {
+            font-family: 'Ubuntu-Light';
+            src: url("{{ url_for('static', filename='flask_static/fonts/Ubuntu-Light.ttf') }}");
+        }
+
+        * {
+            font-family: Ubuntu-Regular;
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            --violet: #780bde;
+            --dark-grey: #333131;
+        }
+    </style>
 </head>
 <body>
 <div class="form">
     <div class="form__headline">Авторизация</div>
     <div class="form__another"><a href="{{ url_for('reg') }}">Нет аккаунта? Создать его!</a></div>
 
-    <form method="POST">
-        <input type="text" required placeholder="E-Mail" name="email-log" class="form__input">
-        <div class="form__inputComment" data-inputProperty="email-log">Такого пользователя не существует</div>
+    <form>
+        <input type="text" required placeholder="Email" name="email" class="form__input">
+        <div class="form__comment" data-error="email"></div>
 
-        <input type="password" required placeholder="Пароль" name="password-log" class="form__input">
-        <div class="form__inputComment" data-inputProperty="password-log">Неверный пароль</div>
-            
-        <input type="submit" value="Войти" class="form__button form__button-block">
+        <input type="password" required placeholder="Пароль" name="password" class="form__input">
+        <div class="form__comment" data-error="password"></div>
     </form>
 
-    <div class="form__forget">
+    <div class="form__button form__button-block">Войти</div>
+    <div class="form__loading"><img src="{{ url_for('static', filename='flask_static/icons/loading.png') }}" alt="Loading"></div>
+
+    <!-- <div class="form__forget">
         <a href="#">Забыли пароль? Восстановить!</a>
-    </div>
+    </div> -->
 </div>
 
 <script src="{{ url_for('static', filename='flask_static/js/log.js') }}"></script>

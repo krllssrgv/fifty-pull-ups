@@ -59,6 +59,13 @@ login_manager.login_view = 'log'
 def load_user(user_id):
     return db.session.get(users, user_id)
     
+def api_login_required(func):
+    def wrapper(*args, **kwargs):
+        if not current_user.is_authenticated:
+            return '', 401
+        return func(*args, **kwargs)
+    return wrapper
+
 
 # Login
 @app.route('/log', methods=['POST', 'GET'])
@@ -75,9 +82,9 @@ def log():
                 login_user(user)
                 return redirect(url_for('serve'))
             else:
-                return jsonify({'error': 'password'}), 401
+                return jsonify({'password': 'Неправильный пароль'}), 401
         else:
-            return jsonify({'error': 'email'}), 401
+            return jsonify({'email': 'Нет такого пользователя'}), 401
     else:
         return render_template('log.html')
 
@@ -97,8 +104,23 @@ def reg():
     
     if request.method == 'POST':
         data = request.json
+        check = True
+        result = {}
 
-        if not (users.query.filter(users.email == data['email']).all()):
+        if (users.query.filter(users.email == data['email']).all()):
+            check = False
+            result['email'] = 'Пользователь уже существует'
+
+        if (len(data['password']) < 8):
+            check = False
+            result['password'] = 'Минимальная длина 8 символов'
+
+        if (data['password'] != data['repeatedPassword']):
+            check = False
+            result['repeatedPassword'] = 'Пароли не совпадают'
+
+
+        if check:
             new_user = users(
                 email=data['email'],
                 password=generate_password_hash(data['password']),
@@ -110,20 +132,14 @@ def reg():
                 db.session.commit()
                 return redirect(url_for('log'))
             except:
-                abort(500)
+                return jsonify({'result': 'Ошибка на сервере'}), 500
         else:
-            abort(409)
+            return jsonify(result), 400
     
     else:
         return render_template('reg.html')
-    
 
-def api_login_required(func):
-    def wrapper(*args, **kwargs):
-        if not current_user.is_authenticated:
-            return '', 401
-        return func(*args, **kwargs)
-    return wrapper
+
 
 
 #API
