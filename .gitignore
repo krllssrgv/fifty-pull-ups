@@ -9,6 +9,7 @@ __pycache__/
 # Distribution / packaging
 .Python
 build/
+
 develop-eggs/
 dist/
 downloads/
@@ -163,9 +164,7 @@ cython_debug/
 front/fiftypullups/build/
 front/fiftypullups/node_modules/
 .vscode/
-<<<<<<< Updated upstream
 front/fiftypullups/package-lock.json
-=======
 
 
 front/fiftypullups/.pnp
@@ -183,6 +182,3 @@ front/fiftypullups/.env.production.local
 front/fiftypullups/npm-debug.log*
 front/fiftypullups/yarn-debug.log*
 front/fiftypullups/yarn-error.log*
->>>>>>> Stashed changes
-
-!build/flask_static/
