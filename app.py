@@ -1,11 +1,13 @@
 # This Python file uses the following encoding: utf-8
 import os
-import copy
+import sys
 
 from flask import Flask, render_template, redirect, request, url_for, jsonify, json, send_from_directory, abort
 from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
+from flask_migrate import Migrate, upgrade, init, migrate
 from flask_login import LoginManager, login_user, UserMixin, login_required, current_user, logout_user
+from flask_cors import CORS, cross_origin
+
 
 import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -17,11 +19,19 @@ from data import Data
 app = Flask(__name__, static_folder='build', static_url_path='')
 app.config['SECRET_KEY'] = '8f42a73054b1749f8f58848be5e6502c'
 
+CORS(app)
+
 
 # DataBase
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data.db'
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
+
+@app.cli.command("init-db")
+def init_db():
+    init()
+    migrate()
+    upgrade()
 
 
 class users(db.Model, UserMixin):
@@ -106,6 +116,29 @@ def reg():
     
     else:
         return render_template('reg.html')
+    
+
+def api_login_required(func):
+    def wrapper(*args, **kwargs):
+        if not current_user.is_authenticated:
+            return '', 401
+        return func(*args, **kwargs)
+    return wrapper
+
+
+#API
+@app.route('/api/get_user_data')
+@api_login_required
+def get_user_data():
+    user = db.session.get(users, int(current_user.get_id()))
+    return jsonify({
+        'name': user.name,
+        'surname': user.surname,
+        'email': user.email,
+        'day': str(user.current_day),
+        'week': str(user.current_week),
+        'progress': str(round(((3 * (user.current_week - 1)) + user.current_day) / (14 * 3), 2) * 100)
+    })
 
 
 
@@ -121,4 +154,4 @@ def serve(path):
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0')
+    app.run(host='0.0.0.0', debug=True)

@@ -184,3 +184,5 @@ front/fiftypullups/npm-debug.log*
 front/fiftypullups/yarn-debug.log*
 front/fiftypullups/yarn-error.log*
 >>>>>>> Stashed changes
+
+!build/flask_static/

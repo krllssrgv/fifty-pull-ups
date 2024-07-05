@@ -50,7 +50,6 @@ class Data:
             [15, 15, 10, 10, 10],
             [14, 13, 12, 11, 10]
         ],
-        None,
         [
             [straight, reverse, straight, reverse, reverse],
             [12, 10, 9, 9, 8],
@@ -92,9 +91,7 @@ class Data:
             [30, 22, 888],
             [34, 20, 888],
             [19, 13, 888]
-        ],
-        None
-    ]
+        ]    ]
 
 
     @classmethod
@@ -109,6 +106,3 @@ class Data:
             
         del types, counts
         return res
-    
-
-print(Data.get_acts(1, 1))
