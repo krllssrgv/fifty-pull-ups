@@ -13,6 +13,7 @@ import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from data import Data
+from functools import wraps
 
 
 # App
@@ -59,11 +60,12 @@ login_manager.login_view = 'log'
 def load_user(user_id):
     return db.session.get(users, user_id)
     
-def api_login_required(func):
+def api_login_required(f):
+    @wraps(f)
     def wrapper(*args, **kwargs):
         if not current_user.is_authenticated:
             return '', 401
-        return func(*args, **kwargs)
+        return f(*args, **kwargs)
     return wrapper
 
 
@@ -143,19 +145,23 @@ def reg():
 
 
 #API
-@app.route('/api/get_user_data')
+@app.route('/api/general')
 @api_login_required
-def get_user_data():
+def get_main():
     user = db.session.get(users, int(current_user.get_id()))
     return jsonify({
         'name': user.name,
-        'surname': user.surname,
-        'email': user.email,
-        'day': str(user.current_day),
-        'week': str(user.current_week),
-        'progress': str(round(((3 * (user.current_week - 1)) + user.current_day) / (14 * 3), 2) * 100)
+        'acts': Data.get_acts(int(user.current_day), int(user.current_week)),
+        'progress': str((round((user.current_week - 1) / 14, 2)) * 100)
     })
 
+
+@app.route('/api/post_act', methods=['POST'])
+@api_login_required
+def post_main():
+    data = request.json
+    print(data)
+    return '', 200
 
 
 # Serve

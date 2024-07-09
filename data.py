@@ -106,3 +106,5 @@ class Data:
             
         del types, counts
         return res
+    
+print(Data.get_acts(1, 1))

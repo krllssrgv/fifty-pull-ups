@@ -12,16 +12,20 @@ function MainPage() {
         setProgress('0');
         setName('Kirill');
         async function getData() {
-            const response = await fetch(`${url}api/get_user_data`, {
+            const response = await fetch(`${url}api/general`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
                 }
             });
-            console.log(response)
+            
+            if (response.ok) {
+                const json = await response.json();
+                console.log(json);
+            }
         }
 
-        getData();
+        // getData();
     }, []);
 
     return(

@@ -5,7 +5,8 @@
             "app/*": ["app/*"],
             "pages/*": ["pages/*"],
             "shared/*": ["shared/*"],
-            "widgets/*": ["widgets/*"]
+            "widgets/*": ["widgets/*"],
+            "assets/*": ["assets/*"]
         }
     }
 }
