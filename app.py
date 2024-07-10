@@ -14,6 +14,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 from data import Data
 from functools import wraps
+from apscheduler.schedulers.background import BackgroundScheduler
+
 
 
 # App
@@ -43,8 +45,11 @@ class users(db.Model, UserMixin):
     name = db.Column(db.String(40), nullable=False)
     surname = db.Column(db.String(40), nullable=False)
     
-    current_week = db.Column(db.Integer, nullable=False, default=1)
-    current_day = db.Column(db.Integer, nullable=False, default=1)
+    current_week = db.Column(db.Integer, nullable=False, default=0)
+    day_one = db.Column(db.Boolean, nullable=False, default=False)
+    day_two = db.Column(db.Boolean, nullable=False, default=False)
+    day_three = db.Column(db.Boolean, nullable=False, default=False)
+    success = db.Column(db.String(2), nullable=False, default='')
 
     def __repr__(self):
         return '<users %r>' % self.id
@@ -73,7 +78,7 @@ def api_login_required(f):
 @app.route('/log', methods=['POST', 'GET'])
 def log():
     if current_user.is_authenticated:
-        return redirect(url_for('serve'), code=400)
+        return redirect(url_for('serve'))
     
     if (request.method == 'POST'):
         data = request.json
@@ -143,25 +148,120 @@ def reg():
 
 
 
+def update_weeks():
+    # Добавьте здесь ваш код
+    # Например, вы можете обновить записи в базе данных или выполнить другие задачи
+    with app.app_context():
+        all_users = users.query.all()
+        for user in all_users:
+            user.day_one = False
+            user.day_two = False
+            user.day_three = False
+
+            if (user.success == '1'):
+                user.current_week += 1
+
+            user.success = ''
+        db.session.commit()
+
+scheduler = BackgroundScheduler()
+scheduler.add_job(update_weeks, 'cron', day_of_week='wed', hour=19, minute=15)
+scheduler.start()
+
+
 
 #API
-@app.route('/api/general')
+@app.route('/api/get_user_acts')
 @api_login_required
-def get_main():
+def get_user_acts():
     user = db.session.get(users, int(current_user.get_id()))
+    user_data = Data.get_week(user.current_week)
+    days = [
+        {
+            'number': 1,
+            'done': user.day_one,
+            'acts': user_data[1]
+        },
+        {
+            'number': 2,
+            'done': user.day_two,
+            'acts': user_data[2]
+        },
+        {
+            'number': 3,
+            'done': user.day_three,
+            'acts': user_data[3]
+        }
+    ]
+
     return jsonify({
         'name': user.name,
-        'acts': Data.get_acts(int(user.current_day), int(user.current_week)),
-        'progress': str((round((user.current_week - 1) / 14, 2)) * 100)
+        'progress': int((round(user.current_week / 13, 2)) * 100),
+        'success': user.success,
+        'current_week': user.current_week,
+        'types': user_data[0],
+        'days': days
     })
 
 
-@app.route('/api/post_act', methods=['POST'])
+@app.route('/api/set_day_as_done', methods=['POST'])
 @api_login_required
-def post_main():
+def set_day_as_done():
     data = request.json
-    print(data)
-    return '', 200
+    user = db.session.get(users, int(current_user.get_id()))
+    if (user):
+        if ('set_day' in data):
+            if (data['set_day'] == 1):
+                user.day_one = True
+                if (user.day_two and user.day_three):
+                    user.success = '0'
+
+            elif (data['set_day'] == 2):
+                user.day_two = True
+                if (user.day_one and user.day_three):
+                    user.success = '0'
+
+            elif (data['set_day'] == 3):
+                user.day_three = True
+                if (user.day_one and user.day_two):
+                    user.success = '0'
+
+            try:
+                db.session.commit()
+                return '', 200
+            except:
+                return '', 500
+        else:
+            return '', 400
+    else:
+        return '', 401
+
+
+
+
+@app.route('/api/send_result', methods=['POST'])
+@api_login_required
+def send_result():
+    data = request.json
+    user = db.session.get(users, int(current_user.get_id()))
+    if (user):
+        if ('success' in data):
+            if (data['success']):
+                user.success = '1'
+            else:
+                user.success = '-1'
+            
+            try:
+                db.session.commit()
+                return jsonify({'success': user.success}), 200
+            except:
+                return '', 500
+            
+        else:
+            return '', 400
+
+    else:
+        return '', 401
 
 
 # Serve

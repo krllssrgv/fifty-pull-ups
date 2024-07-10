@@ -6,7 +6,8 @@
             "pages/*": ["pages/*"],
             "shared/*": ["shared/*"],
             "widgets/*": ["widgets/*"],
-            "assets/*": ["assets/*"]
+            "assets/*": ["assets/*"],
+            "entities/*": ["entities/*"]
         }
     }
 }

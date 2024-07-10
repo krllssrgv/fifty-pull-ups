@@ -5,7 +5,6 @@ import styles from './Header.module.scss';
 function Header(props) {
     const {name, progress} = props;
 
-
     return(
         <header>
             <div className={styles.container}>

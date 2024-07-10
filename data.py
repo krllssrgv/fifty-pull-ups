@@ -2,10 +2,10 @@ from copy import copy
 
 
 class Data:
-    straight = 'Прямой хват'
-    narrow = 'Узкий хват'
-    wide = 'Широкий хват'
-    reverse = 'Обратный хват'
+    straight = 'straight'
+    narrow = 'narrow'
+    wide = 'wide'
+    reverse = 'reverse'
 
     acts = [
         [
@@ -95,16 +95,5 @@ class Data:
 
 
     @classmethod
-    def get_acts(cls, week, day):
-        types = cls.acts[week-1][0]
-        counts = cls.acts[week-1][day]
-
-        res = []
-
-        for i in range(0, len(types)):
-            res.append({'type': copy(types[i]), 'count': copy(str(counts[i]))})
-            
-        del types, counts
-        return res
-    
-print(Data.get_acts(1, 1))
+    def get_week(cls, week):
+        return cls.acts[week]
