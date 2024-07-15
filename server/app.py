@@ -26,6 +26,7 @@ CORS(app)
 # API
 api = Api(app)
 user_api = Namespace('user')
+act_api = Namespace('act')
 
 
 # Login
@@ -79,10 +80,12 @@ user_login_model = user_api.model('user_login', {
 
 
 # API
-@user_api.route('/api/user/register')
+@user_api.route('/register')
 class Register(Resource):
     def post(self):
-        if (not current_user.is_authenticated):
+        if (current_user.is_authenticated):
+            return '', 403
+        else:
             data = request.json
             check = True
             result = {}
@@ -113,17 +116,17 @@ class Register(Resource):
                 except:
                     return '', 500
             else:
-                return jsonify(result), 400
-
-        else:
-            return '', 400
+                return result, 400
 
 
-@user_api.route('/api/user/login')
+@user_api.route('/login')
 class Login(Resource):
     @user_api.expect(user_login_model)
     def post(self):
-        if (not current_user.is_authenticated):
+        if (current_user.is_authenticated):
+            print(1)
+            return '', 400
+        else:
             data = request.json
             user = users.query.filter_by(email=data['email']).first()
 
@@ -132,24 +135,31 @@ class Login(Resource):
                     login_user(user)
                     return '', 204
                 else:
-                    return jsonify({'password': 'Неправильный пароль'}), 401
+                    return {'password': 'Неправильный пароль'}, 401
             else:
-                return jsonify({'email': 'Нет такого пользователя'}), 401
-            
-        else:
-            return '', 400
+                return {'email': 'Нет такого пользователя'}, 401
 
 
-@user_api.route('/api/user/logout')
+@user_api.route('/logout')
 class Logout(Resource):
     def post(self):
         logout_user()
         return '', 204
+    
 
-
-@user_api.route('/api/user/acts')
-class Acts(Resource):
+@user_api.route('/check_login')
+class CheckLogin(Resource):
     def get(self):
+        if (current_user.is_authenticated):
+            return '', 200
+        else:
+            return '', 401
+
+
+@act_api.route('/get_acts')
+class GetActs(Resource):
+    def get(self):
+        print(1)
         if (current_user.is_authenticated):
             user = db.session.get(users, int(current_user.get_id()))
             user_data = Data.get_week(user.current_week)
@@ -171,20 +181,20 @@ class Acts(Resource):
                 }
             ]
 
-            return jsonify({
+            return {
                 'name': user.name,
                 'progress': int((round(user.current_week / 13, 2)) * 100),
                 'success': user.success,
                 'current_week': user.current_week,
                 'types': user_data[0],
                 'days': days
-            })
+            }
         else:
             return '', 401
 
 
-@user_api.route('/api/user/set_day_as_done')
-class Day(Resource):
+@act_api.route('/set_day_as_done')
+class DoneDay(Resource):
     def post(self):
         if (current_user.is_authenticated):
             data = request.json
@@ -193,18 +203,15 @@ class Day(Resource):
                 if ('set_day' in data):
                     if (data['set_day'] == 1):
                         user.day_one = True
-                        if (user.day_two and user.day_three):
-                            user.success = '0'
 
                     elif (data['set_day'] == 2):
                         user.day_two = True
-                        if (user.day_one and user.day_three):
-                            user.success = '0'
 
                     elif (data['set_day'] == 3):
                         user.day_three = True
-                        if (user.day_one and user.day_two):
-                            user.success = '0'
+                    
+                    if (user.day_one and user.day_two and user.day_three):
+                        user.success = '0'
 
                     try:
                         db.session.commit()
@@ -218,7 +225,7 @@ class Day(Resource):
             return '', 401
 
 
-@user_api.route('/api/user/send_result')
+@act_api.route('/send_result')
 class Result(Resource):
     def post(self):
         if (current_user.is_authenticated):
@@ -233,7 +240,7 @@ class Result(Resource):
                     
                     try:
                         db.session.commit()
-                        return jsonify({'success': user.success}), 200
+                        return {'success': user.success}, 200
                     except:
                         return '', 500
                     
@@ -263,12 +270,13 @@ def update_weeks():
         db.session.commit()
 
 scheduler = BackgroundScheduler()
-scheduler.add_job(update_weeks, 'cron', day_of_week='wed', hour=19, minute=15)
+scheduler.add_job(update_weeks, 'cron', day_of_week='mon', hour=1, minute=0)
 scheduler.start()
 
 
+api.add_namespace(act_api, path='/api/act')
+api.add_namespace(user_api, path='/api/user')
 
-api.add_namespace(user_api)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)

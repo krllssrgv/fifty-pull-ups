@@ -10,7 +10,7 @@ function Week(props) {
     const confirmSuccess = (result) => {
         async function sendResult() {
             setIsSuccess('');
-            const response = await fetch(`${url}api/send_result`, {
+            const response = await fetch(`${url}api/act/send_result`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

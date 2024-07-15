@@ -1,7 +1,10 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+
 import { Header } from "widgets/index";
 import { url } from "shared/index";
 import { Acts, Week } from "entities/index";
+import { routes } from "shared/index";
 
 
 function MainPage() {
@@ -17,12 +20,14 @@ function MainPage() {
           [days, setDays] = useState(),
           [week, setWeek] = useState();
 
+    let navigate = useNavigate();
+
 
     useEffect(() => {
         document.title = 'Главная';
         
         async function getData() {
-            const response = await fetch(`${url}api/get_user_acts`, {
+            const response = await fetch(`${url}api/act/get_acts`, {
                 method: 'GET',
                 headers: {
                     'Accept': 'application/json'
@@ -38,54 +43,21 @@ function MainPage() {
                 setTypes(json.types);
                 setDays(json.days);
                 setLoaded(true);
+            } else {
+                
+                if (response.status === 401) {
+                    navigate(routes.login);
+                }
             }
-        }
-
-
-        function localData() {
-            const json = {
-                name: 'Name',
-                progress: '30',
-                success: '',
-                current_week: 2,
-                types: ['straight', 'reverse', 'narrow', 'reverse', 'straight'],
-                days: [
-                    {
-                        number: 1,
-                        done: true,
-                        acts: [5, 4, 5, 4, 3]
-                    },
-                    {
-                        number: 2,
-                        done: true,
-                        acts: [6, 5, 5, 6, 4]
-                    },
-                    {
-                        number: 3,
-                        done: true,
-                        acts: [5, 6, 6, 5, 5]
-                    }
-                ]
-            }
-
-
-            setName(json.name);
-            setProgress(json.progress);
-            setIsSuccess('0');
-            setWeek(json.current_week);
-            setTypes(json.types);
-            setDays(json.days);
-            setLoaded(true);
         }
 
         getData();
-        //localData();
     }, []);
 
 
     const postDone = (x) => {
         async function setDone() {
-            const response = await fetch(`${url}api/set_day_as_done`, {
+            const response = await fetch(`${url}api/act/set_day_as_done`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
