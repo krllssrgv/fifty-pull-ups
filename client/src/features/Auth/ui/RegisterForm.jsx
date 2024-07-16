@@ -46,7 +46,7 @@ function RegisterForm() {
 
             if (response.ok) {
                 setLoading(false);
-                setTimeout(() => navigate(routes.login), 500);
+                navigate(routes.login);
                 
             } else {
                 setLoading(false);

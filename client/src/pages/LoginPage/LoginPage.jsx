@@ -5,7 +5,7 @@ import { url, routes } from 'shared';
 
 
 function LoginPage() {
-    let location = useLocation();
+    const location = useLocation();
 
 
     useEffect(() => {
@@ -13,10 +13,12 @@ function LoginPage() {
 
         async function checkLogin() {
             const response = await fetch(`${url}api/user/check_login`,{
-                method: 'GET'
+                method: 'GET',
+                credentials: 'include'
             });
 
             if (response.ok) {
+                console.log(1);
                 location(routes.main);
             }
         }
