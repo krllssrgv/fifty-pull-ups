@@ -23,6 +23,7 @@ function LoginForm() {
         async function connect() {
             const response = await fetch(`${url}api/user/login`, {
                 method: "POST",
+                credentials: 'include',
                 headers: {
                     'Content-Type': 'application/json'
                 },
@@ -31,6 +32,7 @@ function LoginForm() {
                     password: password
                 })
             });
+            console.log(response);
 
             if (response.ok) {
                 console.log(123)

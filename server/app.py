@@ -2,7 +2,7 @@
 import os
 import sys
 
-from flask import Flask, request, jsonify
+from flask import Flask, request, send_from_directory, Blueprint, make_response, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate, upgrade, init, migrate
 from flask_login import LoginManager, login_user, UserMixin, current_user, logout_user
@@ -16,17 +16,27 @@ from data import Data
 from apscheduler.schedulers.background import BackgroundScheduler
 
 
-
 # App
-app = Flask(__name__)
+app = Flask(__name__, static_folder='build', static_url_path='')
 app.config['SECRET_KEY'] = '8f42a73054b1749f8f58848be5e6502c'
-CORS(app)
+app.config['REMEMBER_COOKIE_SECURE'] = False
+app.config.update(
+    REMEMBER_COOKIE_SECURE=False,  # Установить True, если вы используете HTTPS
+    SESSION_COOKIE_SAMESITE='None',  # Установить SameSite=None для cookie
+)
+
+CORS(app, supports_credentials=True, origins=["http://localhost:3000"])
 
 
 # API
-api = Api(app)
+api_bp = Blueprint('API', __name__, url_prefix='/api')
+api = Api(api_bp)
 user_api = Namespace('user')
 act_api = Namespace('act')
+api.add_namespace(act_api, path='/act')
+api.add_namespace(user_api, path='/user')
+
+app.register_blueprint(api_bp)
 
 
 # Login
@@ -65,10 +75,14 @@ class users(db.Model, UserMixin):
 
 
 
+# @login_manager.user_loader
+# def load_user(user_id):
+#     return db.session.get(users, user_id)
+
+
 @login_manager.user_loader
 def load_user(user_id):
-    return db.session.get(users, user_id)
-
+    return users.query.get(int(user_id))
 
 
 # Models
@@ -121,6 +135,8 @@ class Register(Resource):
 
 @user_api.route('/login')
 class Login(Resource):
+    @user_api.header('Access-Control-Allow-Credentials', 'true')
+    @user_api.header('Access-Control-Allow-Origin', 'http://localhost:3000')
     @user_api.expect(user_login_model)
     def post(self):
         if (current_user.is_authenticated):
@@ -132,7 +148,7 @@ class Login(Resource):
             if user:
                 if check_password_hash(user.password, data['password']):
                     login_user(user)
-                    return '', 204
+                    return '', 200
                 else:
                     return {'password': 'Неправильный пароль'}, 401
             else:
@@ -143,7 +159,7 @@ class Login(Resource):
 class Logout(Resource):
     def post(self):
         logout_user()
-        return '', 204
+        return '', 200
     
 
 @user_api.route('/check_login')
@@ -153,6 +169,15 @@ class CheckLogin(Resource):
             return '', 200
         else:
             return '', 401
+        
+
+# @app.route('/api/user/check_login', methods=['GET'])
+# def set_cookie():
+#     response = make_response(jsonify())
+#     response.set_cookie('my_cookie', 'cookie_value', httponly=True, samesite='None')
+#     # response.headers['Access-Control-Allow-Origin'] = 'http://localhost:3000'
+#     response.headers['Access-Control-Allow-Credentials'] = 'true'
+#     return response, 401
 
 
 @act_api.route('/get_acts')
@@ -250,6 +275,16 @@ class Result(Resource):
                 return '', 401
         else:
             return '', 401
+        
+
+# Serve
+@app.route('/', defaults={'path': ''})
+@app.route('/<path>')
+def serve(path):
+    if (path != "") and (os.path.exists(os.path.join(app.static_folder, path))):
+        return send_from_directory(app.static_folder, path)
+    else:
+        return send_from_directory(app.static_folder, 'index.html')
 
 
 
@@ -271,10 +306,6 @@ def update_weeks():
 scheduler = BackgroundScheduler()
 scheduler.add_job(update_weeks, 'cron', day_of_week='mon', hour=1, minute=0)
 scheduler.start()
-
-
-api.add_namespace(act_api, path='/api/act')
-api.add_namespace(user_api, path='/api/user')
 
 
 if __name__ == '__main__':
