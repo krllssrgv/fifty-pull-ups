@@ -46,7 +46,7 @@ function MainPage() {
             } else {
                 
                 if (response.status === 401) {
-                    navigate(routes.login);
+                    // navigate(routes.login);
                 }
             }
         }

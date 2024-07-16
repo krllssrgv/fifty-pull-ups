@@ -124,7 +124,6 @@ class Login(Resource):
     @user_api.expect(user_login_model)
     def post(self):
         if (current_user.is_authenticated):
-            print(1)
             return '', 400
         else:
             data = request.json
@@ -159,8 +158,8 @@ class CheckLogin(Resource):
 @act_api.route('/get_acts')
 class GetActs(Resource):
     def get(self):
-        print(1)
         if (current_user.is_authenticated):
+            print(1)
             user = db.session.get(users, int(current_user.get_id()))
             user_data = Data.get_week(user.current_week)
             days = [

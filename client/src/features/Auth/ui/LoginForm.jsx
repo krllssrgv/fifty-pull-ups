@@ -33,8 +33,10 @@ function LoginForm() {
             });
 
             if (response.ok) {
+                console.log(123)
                 setLoading(false);
                 navigate(routes.main);
+                
             } else {
                 setLoading(false);
                 if (response.status === 401) {
