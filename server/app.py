@@ -5,12 +5,13 @@ import sys
 from flask import Flask, request, send_from_directory, Blueprint, make_response, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate, upgrade, init, migrate
-from flask_login import LoginManager, login_user, UserMixin, current_user, logout_user
+from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
+
 from flask_cors import CORS
 from flask_restx import Api, Resource, Namespace, fields
 
-import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import timedelta
 
 from data import Data
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -19,14 +20,15 @@ from apscheduler.schedulers.background import BackgroundScheduler
 # App
 app = Flask(__name__, static_folder='build', static_url_path='')
 app.config['SECRET_KEY'] = '8f42a73054b1749f8f58848be5e6502c'
-app.config['REMEMBER_COOKIE_SECURE'] = False
-app.config.update(
-    REMEMBER_COOKIE_SECURE=False,  # Установить True, если вы используете HTTPS
-    SESSION_COOKIE_SAMESITE='None',  # Установить SameSite=None для cookie
-)
+app.config['JWT_SECRET_KEY'] = 'cicdcc3ddndjnfjcicmcdkcm'
+app.config['JWT_TOKEN_LOCATION'] = ['cookies']
+app.config['JWT_COOKIE_CSRF_PROTECT'] = True
 
+# CORS
 CORS(app, supports_credentials=True, origins=["http://localhost:3000"])
 
+# JWT
+jwt = JWTManager(app)
 
 # API
 api_bp = Blueprint('API', __name__, url_prefix='/api')
@@ -37,11 +39,6 @@ api.add_namespace(act_api, path='/act')
 api.add_namespace(user_api, path='/user')
 
 app.register_blueprint(api_bp)
-
-
-# Login
-login_manager = LoginManager(app)
-login_manager.login_view = 'log'
 
 
 # DataBase
@@ -56,7 +53,7 @@ def init_db():
     upgrade()
 
 
-class users(db.Model, UserMixin):
+class users(db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(80), nullable=False)
@@ -72,17 +69,6 @@ class users(db.Model, UserMixin):
 
     def __repr__(self):
         return '<users %r>' % self.id
-
-
-
-# @login_manager.user_loader
-# def load_user(user_id):
-#     return db.session.get(users, user_id)
-
-
-@login_manager.user_loader
-def load_user(user_id):
-    return users.query.get(int(user_id))
 
 
 # Models
@@ -147,8 +133,9 @@ class Login(Resource):
 
             if user:
                 if check_password_hash(user.password, data['password']):
-                    login_user(user)
-                    return '', 200
+                    access_token = create_access_token(identity={'user_id': user.id})
+                    print(access_token)
+                    return '', 200, {'Set-Cookie': f'access_token_cookie={access_token}; HttpOnly; SameSite=None; Secure=False; Path=/; Max-Age={int(timedelta(days=30).total_seconds())}'}
                 else:
                     return {'password': 'Неправильный пароль'}, 401
             else:
@@ -164,28 +151,28 @@ class Logout(Resource):
 
 @user_api.route('/check_login')
 class CheckLogin(Resource):
+    @jwt_required()
     def get(self):
-        if (current_user.is_authenticated):
-            return '', 200
-        else:
-            return '', 401
+        # if (current_user.is_authenticated):
+        #     return '', 200
+        # else:
+        #     return '', 401
+        user = get_jwt_identity()
+        print(user)
+        return '', 401
         
 
-# @app.route('/api/user/check_login', methods=['GET'])
-# def set_cookie():
-#     response = make_response(jsonify())
-#     response.set_cookie('my_cookie', 'cookie_value', httponly=True, samesite='None')
-#     # response.headers['Access-Control-Allow-Origin'] = 'http://localhost:3000'
-#     response.headers['Access-Control-Allow-Credentials'] = 'true'
-#     return response, 401
+# response.headers['Access-Control-Allow-Origin'] = 'http://localhost:3000'
+# response.headers['Access-Control-Allow-Credentials'] = 'true'
 
 
 @act_api.route('/get_acts')
 class GetActs(Resource):
+    @jwt_required()
     def get(self):
-        if (current_user.is_authenticated):
-            print(1)
-            user = db.session.get(users, int(current_user.get_id()))
+        user_id = get_jwt_identity()['user_id']
+        user = db.session.get(users, user_id)
+        if (user):
             user_data = Data.get_week(user.current_week)
             days = [
                 {

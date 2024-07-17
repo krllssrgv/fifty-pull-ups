@@ -32,19 +32,18 @@ function LoginForm() {
                     password: password
                 })
             });
-            console.log(response);
 
             if (response.ok) {
-                console.log(123)
                 setLoading(false);
                 navigate(routes.main);
-                
             } else {
                 setLoading(false);
                 if (response.status === 401) {
-                    const json = await response.json();
-                    if ('email' in json) setEmailError(json.email);
-                    if ('password' in json) setPasswordError(json.password);
+                    // const json = await response.json();
+                    // if ('email' in json) setEmailError(json.email);
+                    // if ('password' in json) setPasswordError(json.password);
+                    navigate(routes.main);
+                    console.log();
                 } else {
                     console.log(response.status);
                 }

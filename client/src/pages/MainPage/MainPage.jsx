@@ -29,6 +29,7 @@ function MainPage() {
         async function getData() {
             const response = await fetch(`${url}api/act/get_acts`, {
                 method: 'GET',
+                credentials: 'include',
                 headers: {
                     'Accept': 'application/json'
                 }
@@ -44,9 +45,11 @@ function MainPage() {
                 setDays(json.days);
                 setLoaded(true);
             } else {
-                
                 if (response.status === 401) {
-                    // navigate(routes.login);
+                    console.log(1);
+                    navigate(routes.login);
+                } else {
+                    console.log(response.status);
                 }
             }
         }

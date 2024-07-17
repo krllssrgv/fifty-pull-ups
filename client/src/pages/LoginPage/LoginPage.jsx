@@ -18,8 +18,8 @@ function LoginPage() {
             });
 
             if (response.ok) {
-                console.log(1);
-                location(routes.main);
+                console.log('Success');
+                // location(routes.main);
             }
         }
 
