@@ -2,13 +2,13 @@
     "compilerOptions": {
         "baseUrl": "src",
         "paths": {
-            "app/": ["app/index"],
-            "pages/": ["pages/index"],
+            "app": ["app/App"],
+            "pages": ["pages/index"],
             "shared": ["shared/index"],
-            "widgets/": ["widgets/index"],
+            "widgets": ["widgets/index"],
             "assets/*": ["assets/*"],
-            "entities/": ["entities/index"],
-            "features/": ["features/index"]
+            "entities/index": ["entities/index"],
+            "features": ["features/index"]
         }
     }
 }

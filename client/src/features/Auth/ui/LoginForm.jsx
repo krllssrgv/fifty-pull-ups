@@ -5,6 +5,7 @@ import { TextInput, ConfirmButton, ErrorField, Loading } from 'widgets';
 import { routes, url } from 'shared';
 import styles from './LoginForm.module.scss';
 
+
 function LoginForm() {
     const [loading, setLoading] = useState(false),
           [email, setEmail] = useState(''),
@@ -39,10 +40,9 @@ function LoginForm() {
             } else {
                 setLoading(false);
                 if (response.status === 401) {
-                    // const json = await response.json();
-                    // if ('email' in json) setEmailError(json.email);
-                    // if ('password' in json) setPasswordError(json.password);
-                    navigate(routes.main);
+                    const json = await response.json();
+                    if ('email' in json) setEmailError(json.email);
+                    if ('password' in json) setPasswordError(json.password);
                     console.log();
                 } else {
                     console.log(response.status);

@@ -1,12 +1,14 @@
 import classNames from 'classnames';
 
+import { ConfirmButton } from 'widgets';
+
 import narrowImg from 'assets/img/1.png';
 import straightImg from 'assets/img/2.png';
 import wideImg from 'assets/img/3.png';
 import reverseImg from 'assets/img/4.png';
 import turner from 'assets/img/turner.png';
 
-import { properties } from 'entities/index';
+import { default as properties } from '../model/properties';
 
 import styles from './Acts.module.scss';
 
@@ -30,6 +32,19 @@ function Acts(props) {
     }
 
 
+    const renderButton = () => {
+        if (day.done) {
+            return(
+                <></>
+            );
+        } else {
+            return(
+                <ConfirmButton text="Выполнить" func={() => postDone(day.number)} />
+            );
+        }
+    }
+
+
     const render = () => {
         if (day) {
             return(
@@ -37,7 +52,7 @@ function Acts(props) {
                     <div className={styles.headline}>День {day.number}</div>
                     <div className={styles.slider}>
                         <div className={styles.data}>Подход №{page + 1}</div>
-                        <div className={styles.data}>Количество: {day.acts[page]}</div>
+                        <div className={styles.data}>Количество: {(day.acts[page] == 888 ? 'Максимально' : day.acts[page])}</div>
                         <div className={styles.data}>{properties[types[page]]}</div>
 
                         <div className={styles.img}><img src={displayedImg[types[page]]} alt="" /></div>
@@ -45,16 +60,7 @@ function Acts(props) {
                         <div className={classNames(styles.turners, styles.left_btn, ((page === 0) ? styles.disabled_btn : null))} onClick={() => turn('left')}><img src={turner} alt="left" /></div>
                         <div className={classNames(styles.turners, styles.right_btn, ((page === (types.length - 1)) ? styles.disabled_btn : null))} onClick={() => turn('right')}><img src={turner} alt="right" /></div>
                     </div>
-                    <div 
-                        className={classNames(styles.button, (day.done ? styles.done : null))} 
-                        onClick={() => {
-                            if (!day.done) {
-                                postDone(day.number);
-                            }
-                        }}
-                    >
-                        Выполнено
-                    </div>
+                    { renderButton() }
                 </div>
             );
         } else {

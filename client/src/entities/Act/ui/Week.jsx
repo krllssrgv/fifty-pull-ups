@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import classNames from 'classnames';
 import { url } from 'shared/index';
 import styles from './Week.module.scss';
@@ -12,6 +11,7 @@ function Week(props) {
             setIsSuccess('');
             const response = await fetch(`${url}api/act/send_result`, {
                 method: 'POST',
+                credentials: 'include',
                 headers: {
                     'Content-Type': 'application/json'
                 },

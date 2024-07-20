@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-
-import { Header } from "widgets/index";
-import { url } from "shared/index";
-import { Acts, Week } from "entities/index";
-import { routes } from "shared/index";
+import { Header, Loading } from "widgets";
+import { url, routes } from "shared";
+import { Week, Acts } from "entities/index";
+import styles from './MainPage.module.scss';
 
 
 function MainPage() {
@@ -18,9 +17,11 @@ function MainPage() {
 
           [types, setTypes] = useState(),
           [days, setDays] = useState(),
-          [week, setWeek] = useState();
+          [week, setWeek] = useState(),
 
-    let navigate = useNavigate();
+          [finish, setFinish] = useState(false);
+
+    const navigate = useNavigate();
 
 
     useEffect(() => {
@@ -35,22 +36,25 @@ function MainPage() {
                 }
             });
             
-            if (response.ok) {
+            if (response.status === 200) {
                 const json = await response.json();
-                setName(json.name);
-                setProgress(json.progress);
-                setIsSuccess(json.success);
-                setWeek(json.current_week);
-                setTypes(json.types);
-                setDays(json.days);
-                setLoaded(true);
-            } else {
-                if (response.status === 401) {
-                    console.log(1);
-                    navigate(routes.login);
+                if (json.finish) {
+                    setFinish(true);
+                    setName(json.name);
+                    setProgress(json.progress);
                 } else {
-                    console.log(response.status);
+                    setName(json.name);
+                    setProgress(json.progress);
+                    setIsSuccess(json.success);
+                    setWeek(json.current_week);
+                    setTypes(json.types);
+                    setDays(json.days);
+                    setLoaded(true);
                 }
+            } else if (response.status === 401) {
+                navigate(routes.login);
+            } else {
+                console.log(response.status);
             }
         }
 
@@ -62,6 +66,7 @@ function MainPage() {
         async function setDone() {
             const response = await fetch(`${url}api/act/set_day_as_done`, {
                 method: 'POST',
+                credentials: 'include',
                 headers: {
                     'Content-Type': 'application/json'
                 },
@@ -84,18 +89,29 @@ function MainPage() {
 
 
     const render = () => {
-        if (loaded) {
+        if (finish) {
             return(
                 <>
                     <Header progress={progress} name={name} />
-                    <Week isSuccess={isSuccess} setIsSuccess={setIsSuccess} doneDays={[days[0].done, days[1].done, days[2].done]} week={week} setDisplayedAct={setDisplayedAct} setPage={setPage} />
-                    <Acts day={(displayedAct ? days[displayedAct - 1] : null)} types={types} postDone={postDone} page={page} setPage={setPage} />
+                    <div className={styles.finish}>Программа выполнена!</div>
                 </>
             );
         } else {
-            return(
-                <></>
-            );
+            if (loaded) {
+                return(
+                    <>
+                        <Header progress={progress} name={name} />
+                        <Week isSuccess={isSuccess} setIsSuccess={setIsSuccess} doneDays={[days[0].done, days[1].done, days[2].done]} week={week} setDisplayedAct={setDisplayedAct} setPage={setPage} />
+                        <Acts day={(displayedAct ? days[displayedAct - 1] : null)} types={types} postDone={postDone} page={page} setPage={setPage} />
+                    </>
+                );
+            } else {
+                return(
+                    <div className={styles.loading}>
+                        <Loading size="max" />
+                    </div>
+                );
+            }
         }
     }
     

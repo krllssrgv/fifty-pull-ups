@@ -1,11 +1,11 @@
 import { useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { LoginForm, AuthContainer } from 'features';
 import { url, routes } from 'shared';
 
 
 function LoginPage() {
-    const location = useLocation();
+    const navigate = useNavigate();
 
 
     useEffect(() => {
@@ -18,8 +18,7 @@ function LoginPage() {
             });
 
             if (response.ok) {
-                console.log('Success');
-                // location(routes.main);
+                navigate(routes.main);
             }
         }
 

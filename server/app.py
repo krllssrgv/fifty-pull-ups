@@ -6,14 +6,13 @@ from flask import Flask, request, send_from_directory, Blueprint, make_response,
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate, upgrade, init, migrate
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
-
 from flask_cors import CORS
 from flask_restx import Api, Resource, Namespace, fields
-
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import timedelta
 
 from data import Data
+from check_user import send_email, create_code
 from apscheduler.schedulers.background import BackgroundScheduler
 
 
@@ -23,12 +22,18 @@ app.config['SECRET_KEY'] = '8f42a73054b1749f8f58848be5e6502c'
 app.config['JWT_SECRET_KEY'] = 'cicdcc3ddndjnfjcicmcdkcm'
 app.config['JWT_TOKEN_LOCATION'] = ['cookies']
 app.config['JWT_COOKIE_CSRF_PROTECT'] = True
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(days=15)
+app.config['JWT_BLACKLIST_ENABLED'] = True
+app.config['JWT_BLACKLIST_TOKEN_CHECKS'] = ['access']
 
 # CORS
 CORS(app, supports_credentials=True, origins=["http://localhost:3000"])
 
 # JWT
 jwt = JWTManager(app)
+
+# CSRF
+app.config['JWT_COOKIE_CSRF_PROTECT'] = False
 
 # API
 api_bp = Blueprint('API', __name__, url_prefix='/api')
@@ -60,6 +65,9 @@ class users(db.Model):
     password = db.Column(db.String(30), nullable=False)
     name = db.Column(db.String(40), nullable=False)
     surname = db.Column(db.String(40), nullable=False)
+
+    confirmed = db.Column(db.Boolean, default=False, nullable=False)
+    check_code = db.Column(db.String(10), default='', nullable=False)
     
     current_week = db.Column(db.Integer, nullable=False, default=0)
     day_one = db.Column(db.Boolean, nullable=False, default=False)
@@ -77,6 +85,9 @@ user_login_model = user_api.model('user_login', {
     'password': fields.String(required=True, description='Password')
 })
 
+user_confirm_model = user_api.model('user_login', {
+    'code': fields.String(required=True, description='Code'),
+})
 
 
 # API
@@ -100,15 +111,18 @@ class Register(Resource):
             result['repeatedPassword'] = 'Пароли не совпадают'
 
         if check:
+            code = create_code()
             new_user = users(
-                email=data['email'],
-                password=generate_password_hash(data['password']),
-                name=data['name'],
-                surname=data['surname']
+                email=str(data['email']),
+                password=generate_password_hash(str(data['password'])),
+                name=str(data['name']),
+                surname=str(data['surname']),
+                check_code = code
             )
             try:
                 db.session.add(new_user)
                 db.session.commit()
+                print(send_email(str(data['email']), code))
                 return '', 204
             except:
                 return '', 500
@@ -118,18 +132,15 @@ class Register(Resource):
 
 @user_api.route('/login')
 class Login(Resource):
-    # @user_api.header('Access-Control-Allow-Credentials', 'true')
-    # @user_api.header('Access-Control-Allow-Origin', 'http://localhost:3000')
     @user_api.expect(user_login_model)
     def post(self):
         data = request.json
         user = users.query.filter_by(email=data['email']).first()
-
         if user:
             if check_password_hash(user.password, data['password']):
                 access_token = create_access_token(identity={'user_id': user.id})
                 return '', 200, {
-                    'Set-Cookie': f'access_token_cookie={access_token}; HttpOnly; SameSite=None; Secure=False; Path=/; Max-Age={int(timedelta(days=30).total_seconds())}'
+                    'Set-Cookie': f'access_token_cookie={access_token}; HttpOnly; SameSite=None; Secure=False; Path=/; Max-Age={int(timedelta(days=15).total_seconds())}'
                 }
             else:
                 return {'password': 'Неправильный пароль'}, 401
@@ -139,10 +150,11 @@ class Login(Resource):
 
 @user_api.route('/logout')
 class Logout(Resource):
-    @jwt_required
-    def post(self):
+    @jwt_required()
+    def get(self):
         user_id = get_jwt_identity()['user_id']
         user = db.session.get(users, user_id)
+
         if (user):
             return '', 200, {
                 'Set-Cookie': 'access_token_cookie=; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; Path=/'
@@ -171,44 +183,53 @@ class GetActs(Resource):
         user_id = get_jwt_identity()['user_id']
         user = db.session.get(users, user_id)
         if (user):
-            user_data = Data.get_week(user.current_week)
-            days = [
-                {
-                    'number': 1,
-                    'done': user.day_one,
-                    'acts': user_data[1]
-                },
-                {
-                    'number': 2,
-                    'done': user.day_two,
-                    'acts': user_data[2]
-                },
-                {
-                    'number': 3,
-                    'done': user.day_three,
-                    'acts': user_data[3]
+            if (user.current_week < 14):
+                user_data = Data.get_week(user.current_week)
+                days = [
+                    {
+                        'number': 1,
+                        'done': user.day_one,
+                        'acts': user_data[1]
+                    },
+                    {
+                        'number': 2,
+                        'done': user.day_two,
+                        'acts': user_data[2]
+                    },
+                    {
+                        'number': 3,
+                        'done': user.day_three,
+                        'acts': user_data[3]
+                    }
+                ]
+                
+                return {
+                    'name': user.name,
+                    'progress': int((round(user.current_week / 14, 2)) * 100),
+                    'success': user.success,
+                    'current_week': user.current_week,
+                    'types': user_data[0],
+                    'days': days,
+                    'finish': False
                 }
-            ]
-
-            return {
-                'name': user.name,
-                'progress': int((round(user.current_week / 13, 2)) * 100),
-                'success': user.success,
-                'current_week': user.current_week,
-                'types': user_data[0],
-                'days': days
-            }
+            else:
+                return {
+                    'name': user.name,
+                    'progress': 100,
+                    'finish': True
+                }
         else:
             return '', 401
 
 
 @act_api.route('/set_day_as_done')
 class DoneDay(Resource):
-    @jwt_required
+    @jwt_required()
     def post(self):
         user_id = get_jwt_identity()['user_id']
         user = db.session.get(users, user_id)
-        if (user):
+        print(user)
+        if (user_id):
             data = request.json
             if ('set_day' in data):
                 if (data['set_day'] == 1):
@@ -227,14 +248,14 @@ class DoneDay(Resource):
                 except:
                     return '', 500
             else:
-                    return '', 400 
+                    return '', 400
         else:
             return '', 401
 
 
 @act_api.route('/send_result')
 class Result(Resource):
-    @jwt_required
+    @jwt_required()
     def post(self):
         user_id = get_jwt_identity()['user_id']
         user = db.session.get(users, user_id)
@@ -253,6 +274,58 @@ class Result(Resource):
                     return '', 500 
             else:
                 return '', 400
+        else:
+            return '', 401
+        
+
+@user_api.route('/user')
+class UserRequests(Resource):
+    @jwt_required()
+    def get(self):
+        user_id = get_jwt_identity()['user_id']
+        user = db.session.get(users, user_id)
+
+        if (user):
+            progress = ''
+            if (user.current_week < 14):
+                progress = int((round(user.current_week / 14, 2)) * 100)
+            else:
+                progress = 100
+                
+            return {
+                "name": user.name,
+                "surname": user.surname,
+                "email": user.email,
+                "confirmed": user.confirmed,
+                "progress": progress
+            }
+        else:
+            return '', 401
+        
+
+@user_api.route('/confirm_email')
+class ConfirmEmail(Resource):
+    @jwt_required()
+    @user_api.expect(user_confirm_model)
+    def post(self):
+        user_id = get_jwt_identity()['user_id']
+        user = db.session.get(users, user_id)
+
+        if (user):
+            if (not user.confirmed):
+                code = request.json['code']
+                if (code == user.check_code):
+                    user.check_code = ''
+                    user.confirmed = True
+                    try:
+                        db.session.commit()
+                        return '', 204
+                    except:
+                        return '', 500
+                else:
+                    return {'error_code': 'Неправильный код'}, 400
+            else:
+                return {'error': 'Почта уже подтверждена'}, 400
         else:
             return '', 401
         
