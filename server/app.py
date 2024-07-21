@@ -2,18 +2,19 @@
 import os
 import sys
 
-from flask import Flask, request, send_from_directory, Blueprint, make_response, jsonify
+from flask import Flask, request, send_from_directory, Blueprint, make_response
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate, upgrade, init, migrate
-from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
+from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity, get_jwt, set_access_cookies, unset_jwt_cookies
 from flask_cors import CORS
 from flask_restx import Api, Resource, Namespace, fields
 from werkzeug.security import generate_password_hash, check_password_hash
-from datetime import timedelta
 
+from datetime import timedelta
 from data import Data
-from check_user import send_email, create_code
 from apscheduler.schedulers.background import BackgroundScheduler
+
+from check_user import send_email, create_code
 
 
 # App
@@ -25,15 +26,16 @@ app.config['JWT_COOKIE_CSRF_PROTECT'] = True
 app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(days=15)
 app.config['JWT_BLACKLIST_ENABLED'] = True
 app.config['JWT_BLACKLIST_TOKEN_CHECKS'] = ['access']
+app.config['JWT_COOKIE_SAMESITE'] = 'None'
+app.config['JWT_COOKIE_SECURE'] = True
+app.config['JWT_COOKIE_CSRF_PROTECT'] = False
+
 
 # CORS
 CORS(app, supports_credentials=True, origins=["http://localhost:3000"])
 
 # JWT
 jwt = JWTManager(app)
-
-# CSRF
-app.config['JWT_COOKIE_CSRF_PROTECT'] = False
 
 # API
 api_bp = Blueprint('API', __name__, url_prefix='/api')
@@ -42,9 +44,7 @@ user_api = Namespace('user')
 act_api = Namespace('act')
 api.add_namespace(act_api, path='/act')
 api.add_namespace(user_api, path='/user')
-
 app.register_blueprint(api_bp)
-
 
 # DataBase
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data.db'
@@ -90,7 +90,17 @@ user_confirm_model = user_api.model('user_login', {
 })
 
 
-# API
+BLACKLIST = set()
+
+@jwt.token_in_blocklist_loader
+def check_if_token_in_blacklist(jwt_header, jwt_payload):
+    jti = jwt_payload['jti']
+    return jti in BLACKLIST
+
+
+
+# User API
+
 @user_api.route('/register')
 class Register(Resource):
     def post(self):
@@ -138,10 +148,10 @@ class Login(Resource):
         user = users.query.filter_by(email=data['email']).first()
         if user:
             if check_password_hash(user.password, data['password']):
-                access_token = create_access_token(identity={'user_id': user.id})
-                return '', 200, {
-                    'Set-Cookie': f'access_token_cookie={access_token}; HttpOnly; SameSite=None; Secure=False; Path=/; Max-Age={int(timedelta(days=15).total_seconds())}'
-                }
+                access_token = create_access_token(identity=user.id)
+                response = make_response()
+                set_access_cookies(response, access_token)
+                return response
             else:
                 return {'password': 'Неправильный пароль'}, 401
         else:
@@ -151,14 +161,15 @@ class Login(Resource):
 @user_api.route('/logout')
 class Logout(Resource):
     @jwt_required()
-    def get(self):
-        user_id = get_jwt_identity()['user_id']
-        user = db.session.get(users, user_id)
+    def post(self):
+        user = db.session.get(users, get_jwt_identity())
 
         if (user):
-            return '', 200, {
-                'Set-Cookie': 'access_token_cookie=; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; Path=/'
-            }
+            jti = get_jwt()['jti']
+            BLACKLIST.add(jti)
+            response = make_response()
+            unset_jwt_cookies(response)
+            return response
         else:
             return '', 401
     
@@ -167,21 +178,94 @@ class Logout(Resource):
 class CheckLogin(Resource):
     @jwt_required()
     def get(self):
-        user_id = get_jwt_identity()['user_id']
-        user = db.session.get(users, user_id)
+        user = db.session.get(users, get_jwt_identity())
 
         if (user):
             return '', 204
         else:
             return '', 401
+        
 
+@user_api.route('/confirm_email')
+class ConfirmEmail(Resource):
+    @jwt_required()
+    @user_api.expect(user_confirm_model)
+    def post(self):
+        user = db.session.get(users, get_jwt_identity())
+
+        if (user):
+            if (not user.confirmed):
+                code = request.json['code']
+                if (code == user.check_code):
+                    user.check_code = ''
+                    user.confirmed = True
+                    try:
+                        db.session.commit()
+                        return '', 204
+                    except:
+                        return '', 500
+                else:
+                    return {'error': 'Неправильный код'}, 400
+            else:
+                return {'error': 'Почта уже подтверждена'}, 400
+        else:
+            return '', 401
+        
+
+@user_api.route('/user')
+class UserRequests(Resource):
+    @jwt_required()
+    def get(self):
+        user = db.session.get(users, get_jwt_identity())
+
+        if (user):
+            progress = ''
+            if (user.current_week < 14):
+                progress = int((round(user.current_week / 14, 2)) * 100)
+            else:
+                progress = 100
+
+            return {
+                "name": user.name,
+                "surname": user.surname,
+                "email": user.email,
+                "confirmed": user.confirmed,
+                "progress": progress
+            }
+        else:
+            return '', 401
+        
+
+@user_api.route('/remove')
+class RemoveUser(Resource):
+    @jwt_required()
+    def get(self):
+        user = db.session.get(users, get_jwt_identity())
+
+        if (user):
+            try:
+                db.session.delete(user)
+                db.session.commit()
+                jti = get_jwt()['jti']
+                BLACKLIST.add(jti)
+                response = make_response()
+                unset_jwt_cookies(response)
+                return response
+            except:
+                return '', 500
+        else:
+            return '', 401
+       
+
+
+# Act API
 
 @act_api.route('/get_acts')
 class GetActs(Resource):
     @jwt_required()
     def get(self):
-        user_id = get_jwt_identity()['user_id']
-        user = db.session.get(users, user_id)
+        user = db.session.get(users, get_jwt_identity())
+
         if (user):
             if (user.current_week < 14):
                 user_data = Data.get_week(user.current_week)
@@ -226,10 +310,9 @@ class GetActs(Resource):
 class DoneDay(Resource):
     @jwt_required()
     def post(self):
-        user_id = get_jwt_identity()['user_id']
-        user = db.session.get(users, user_id)
-        print(user)
-        if (user_id):
+        user = db.session.get(users, get_jwt_identity())
+
+        if (user):
             data = request.json
             if ('set_day' in data):
                 if (data['set_day'] == 1):
@@ -257,8 +340,8 @@ class DoneDay(Resource):
 class Result(Resource):
     @jwt_required()
     def post(self):
-        user_id = get_jwt_identity()['user_id']
-        user = db.session.get(users, user_id)
+        user = db.session.get(users, get_jwt_identity())
+
         if (user):
             data = request.json
             if ('success' in data):
@@ -275,59 +358,9 @@ class Result(Resource):
             else:
                 return '', 400
         else:
-            return '', 401
-        
+            return '', 401 
 
-@user_api.route('/user')
-class UserRequests(Resource):
-    @jwt_required()
-    def get(self):
-        user_id = get_jwt_identity()['user_id']
-        user = db.session.get(users, user_id)
 
-        if (user):
-            progress = ''
-            if (user.current_week < 14):
-                progress = int((round(user.current_week / 14, 2)) * 100)
-            else:
-                progress = 100
-                
-            return {
-                "name": user.name,
-                "surname": user.surname,
-                "email": user.email,
-                "confirmed": user.confirmed,
-                "progress": progress
-            }
-        else:
-            return '', 401
-        
-
-@user_api.route('/confirm_email')
-class ConfirmEmail(Resource):
-    @jwt_required()
-    @user_api.expect(user_confirm_model)
-    def post(self):
-        user_id = get_jwt_identity()['user_id']
-        user = db.session.get(users, user_id)
-
-        if (user):
-            if (not user.confirmed):
-                code = request.json['code']
-                if (code == user.check_code):
-                    user.check_code = ''
-                    user.confirmed = True
-                    try:
-                        db.session.commit()
-                        return '', 204
-                    except:
-                        return '', 500
-                else:
-                    return {'error_code': 'Неправильный код'}, 400
-            else:
-                return {'error': 'Почта уже подтверждена'}, 400
-        else:
-            return '', 401
         
 
 # Serve
