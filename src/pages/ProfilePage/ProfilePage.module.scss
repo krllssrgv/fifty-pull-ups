@@ -8,6 +8,7 @@
     border: 3px solid $main-violet;
     padding: 8px;
     border-radius: 6px;
+    position: relative;
 }
 
 
@@ -25,4 +26,25 @@
 
 .exit {
     margin-top: 70px;
+}
+
+
+.code {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-bottom: 10px;
+}
+
+
+.remove {
+    font-size: 15px;
+    color: red;
+    text-decoration: underline;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    &:hover {
+        cursor: pointer;
+    }
 }

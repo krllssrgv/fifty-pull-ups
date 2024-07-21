@@ -61,7 +61,7 @@ function Week(props) {
         <div className={styles.container}>
             <div className={styles.headline}>Ваша текущая неделя</div>
 
-            <div className={styles.subheadline}>Номер по программе - {week}</div>
+            <div className={styles.subheadline}>Номер по программе - {week + 1}</div>
 
             <div className={styles.subheadline}>Тренировки:</div>
 
