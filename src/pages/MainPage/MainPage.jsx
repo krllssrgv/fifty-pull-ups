@@ -66,7 +66,7 @@ function MainPage() {
         async function setDone() {
             const response = await fetch(`${url}api/act/set_day_as_done`, {
                 method: 'POST',
-                // credentials: 'include',
+                credentials: 'include',
                 headers: {
                     'Content-Type': 'application/json'
                 },
