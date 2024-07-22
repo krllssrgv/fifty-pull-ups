@@ -7,12 +7,12 @@ import styles from './LoginForm.module.scss';
 
 
 function LoginForm(props) {
-    const [loading, setLoading] = useState(false),
+    const [localLoading, setLoading] = useState(false),
           [email, setEmail] = useState(''),
           [emailError, setEmailError] = useState(''),
           [password, setPassword] = useState(''),
           [passwordError, setPasswordError] = useState(''),
-          { setIsLogin } = props,
+          { isLogin, setIsLogin, loading } = props,
           navigate = useNavigate();
 
 
@@ -56,7 +56,7 @@ function LoginForm(props) {
 
 
     const renderButton = () => {
-        if (loading) {
+        if (localLoading) {
             return(<Loading size={'min'} />);
         } else {
             return(<ConfirmButton text="Войти" func={login} />)
@@ -64,37 +64,54 @@ function LoginForm(props) {
     }
 
 
+    const render = () => {
+        if (!loading && !isLogin) {
+            return(
+                <>
+                    <div className={styles.headline}>Авторизация</div>
+                        
+                    <div className={styles.input}>
+                        <TextInput
+                            type="text" 
+                            value={email}
+                            setValue={setEmail}
+                            placeholder="Email"
+                            error={emailError}
+                        />
+            
+                        <ErrorField text={emailError} />
+                    </div>
+                            
+                    <div className={styles.input}>
+                        <TextInput
+                            type="password"
+                            value={password}
+                            setValue={setPassword}
+                            placeholder="Пароль"
+                            error={passwordError}
+                        />
+            
+                        <ErrorField text={passwordError} />
+                    </div>
+            
+                    <Link to={routes.register} className={styles.link}>Зарегистрироваться</Link>
+            
+                    { renderButton() }
+                </>
+            );
+        } else {
+            return(
+                <>
+                    <Loading size="max" />
+                </>
+            );
+        }
+    }
+
+
     return(
         <>
-            <div className={styles.headline}>Авторизация</div>
-            
-            <div className={styles.input}>
-                <TextInput
-                    type="text" 
-                    value={email}
-                    setValue={setEmail}
-                    placeholder="Email"
-                    error={emailError}
-                />
-
-                <ErrorField text={emailError} />
-            </div>
-                
-            <div className={styles.input}>
-                <TextInput
-                    type="password"
-                    value={password}
-                    setValue={setPassword}
-                    placeholder="Пароль"
-                    error={passwordError}
-                />
-
-                <ErrorField text={passwordError} />
-            </div>
-
-            <Link to={routes.register} className={styles.link}>Зарегистрироваться</Link>
-
-            { renderButton() }
+            { render() }
         </>
     );
 }

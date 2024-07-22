@@ -21,8 +21,8 @@ function ProfilePage() {
 
 
     useEffect(() => {
-        if (!isLogin) navigate(routes.login);
-    }, [isLogin]);
+        if (!isLogin && !loading) navigate(routes.login);
+    }, [isLogin, loading]);
 
 
     const logout = () => {

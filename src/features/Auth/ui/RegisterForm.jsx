@@ -5,7 +5,7 @@ import { TextInput, ConfirmButton, ErrorField, Loading } from 'widgets';
 import { routes, url } from 'shared';
 import styles from './RegisterForm.module.scss';
 
-function RegisterForm() {
+function RegisterForm(props) {
     const [loading, setLoading] = useState(false),
           [name, setName] = useState(''),
           [nameError, setNameError] = useState(''),
@@ -16,11 +16,10 @@ function RegisterForm() {
           [password, setPassword] = useState(''),
           [passwordError, setPasswordError] = useState(''),
           [repeatedPassword, setRepeatedPassword] = useState(''),
-          [repeatedPasswordError, setRepeatedPasswordError] = useState('');
+          [repeatedPasswordError, setRepeatedPasswordError] = useState(''),
+          navigate = useNavigate();
 
-    let navigate = useNavigate();
-
-
+          
     const register = () => {
         setNameError('');
         setSurnameError('');
@@ -46,7 +45,7 @@ function RegisterForm() {
 
             if (response.ok) {
                 setLoading(false);
-                navigate(routes.login);
+                
                 
             } else {
                 setLoading(false);

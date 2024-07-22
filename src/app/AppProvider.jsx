@@ -4,7 +4,7 @@ import { url } from "shared";
 const AppContext = createContext();
 
 function AppProvider(props) {
-    const [isLogin, setIsLogin] = useState(true),
+    const [isLogin, setIsLogin] = useState(false),
           [loading, setLoading] = useState(true),
 
           [name, setName] = useState(''),
@@ -20,22 +20,21 @@ function AppProvider(props) {
           [week, setWeek] = useState();
 
 
-
     useEffect(() => {
         async function checkLogin() {
             const response = await fetch(`${url}api/user/check_login`, {
                 method: 'GET',
                 credentials: 'include'
             });
-
+    
             if (response.ok) {
                 setIsLogin(true);
             } else {
                 setIsLogin(false);
             }
         }
-
-       checkLogin();
+    
+        checkLogin();
     }, []);
 
 
@@ -50,7 +49,6 @@ function AppProvider(props) {
             });
 
             if (response.status === 200) {
-                
                 const json = await response.json();
                 setName(json.name);
                 setSurname(json.surname);

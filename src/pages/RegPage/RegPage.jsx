@@ -7,7 +7,7 @@ import { routes } from 'shared';
 
 function RegPage() {
     const navigate = useNavigate(),
-          { isLogin } = useContext(AppContext);
+          { isLogin, setIsLogin } = useContext(AppContext);
 
 
     useEffect(() => {
@@ -22,7 +22,7 @@ function RegPage() {
 
     return(
         <AuthContainer>
-            <RegisterForm />
+            <RegisterForm isLogin={isLogin} setIsLogin={setIsLogin} />
         </AuthContainer>
     );
 }

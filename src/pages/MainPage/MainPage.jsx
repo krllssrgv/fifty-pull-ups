@@ -20,8 +20,8 @@ function MainPage() {
 
 
     useEffect(() => {
-        if (!isLogin) navigate(routes.login);
-    }, [isLogin]);
+        if (!isLogin && !loading) navigate(routes.login);
+    }, [isLogin, loading]);
 
 
     const postDone = (x) => {
@@ -67,16 +67,14 @@ function MainPage() {
                         </>
                     );
                 } else {
-                    // if (days !== undefined && week !== undefined) {
-                        return(
-                            <>
-                                <Header progress={progress} name={name} />
-                                <Week isSuccess={isSuccess} setIsSuccess={setIsSuccess} doneDays={[days[0].done, days[1].done, days[2].done]} week={week} setDisplayedAct={setDisplayedAct} setPage={setPage} />
-                                <Acts day={(displayedAct ? days[displayedAct - 1] : null)} types={types} postDone={postDone} page={page} setPage={setPage} />
-                            </>
-                        );
-                    }
-                // }
+                    return(
+                        <>
+                            <Header progress={progress} name={name} />
+                            <Week isSuccess={isSuccess} setIsSuccess={setIsSuccess} doneDays={[days[0].done, days[1].done, days[2].done]} week={week} setDisplayedAct={setDisplayedAct} setPage={setPage} />
+                            <Acts day={(displayedAct ? days[displayedAct - 1] : null)} types={types} postDone={postDone} page={page} setPage={setPage} />
+                        </>
+                    );
+                }
             } else {
                 return(<></>);
             }

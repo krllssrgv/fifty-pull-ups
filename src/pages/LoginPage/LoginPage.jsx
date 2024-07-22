@@ -22,7 +22,7 @@ function LoginPage() {
 
     return(
         <AuthContainer>
-            <LoginForm setIsLogin={setIsLogin} />
+            <LoginForm isLogin={isLogin} setIsLogin={setIsLogin} />
         </AuthContainer>
     );
 }
