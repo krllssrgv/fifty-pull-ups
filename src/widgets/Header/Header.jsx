@@ -11,7 +11,7 @@ function Header(props) {
                 <Link to={routes.main} className={styles.progress}>
                     <div className={styles.title}>Ваш прогресс - {progress}%</div>
                     <div className={styles.line}>
-                        <div className={styles.done} style={{width: `${progress}%`}}></div>
+                        <div className={styles.done} style={{width: `${(progress === undefined) ? 0 : progress}%`}}></div>
                     </div>
                 </Link>
 

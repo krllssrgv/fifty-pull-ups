@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { TextInput, ConfirmButton, ErrorField, Loading } from 'widgets';
 import { routes, url } from 'shared';
 import styles from './RegisterForm.module.scss';
@@ -45,8 +44,7 @@ function RegisterForm(props) {
 
             if (response.ok) {
                 setLoading(false);
-                
-                
+                navigate(routes.login);  
             } else {
                 setLoading(false);
                 if (response.status === 400) {

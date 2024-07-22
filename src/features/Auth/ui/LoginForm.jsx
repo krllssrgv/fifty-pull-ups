@@ -1,18 +1,16 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { TextInput, ConfirmButton, ErrorField, Loading } from 'widgets';
 import { routes, url } from 'shared';
 import styles from './LoginForm.module.scss';
 
 
 function LoginForm(props) {
-    const [localLoading, setLoading] = useState(false),
+    const [loading, setLoading] = useState(false),
           [email, setEmail] = useState(''),
           [emailError, setEmailError] = useState(''),
           [password, setPassword] = useState(''),
           [passwordError, setPasswordError] = useState(''),
-          { isLogin, setIsLogin, loading } = props,
           navigate = useNavigate();
 
 
@@ -36,7 +34,6 @@ function LoginForm(props) {
 
             if (response.ok) {
                 setLoading(false);
-                setIsLogin(true);
                 navigate(routes.main);
             } else {
                 setLoading(false);
@@ -56,7 +53,7 @@ function LoginForm(props) {
 
 
     const renderButton = () => {
-        if (localLoading) {
+        if (loading) {
             return(<Loading size={'min'} />);
         } else {
             return(<ConfirmButton text="Войти" func={login} />)
@@ -64,54 +61,37 @@ function LoginForm(props) {
     }
 
 
-    const render = () => {
-        if (!loading && !isLogin) {
-            return(
-                <>
-                    <div className={styles.headline}>Авторизация</div>
-                        
-                    <div className={styles.input}>
-                        <TextInput
-                            type="text" 
-                            value={email}
-                            setValue={setEmail}
-                            placeholder="Email"
-                            error={emailError}
-                        />
-            
-                        <ErrorField text={emailError} />
-                    </div>
-                            
-                    <div className={styles.input}>
-                        <TextInput
-                            type="password"
-                            value={password}
-                            setValue={setPassword}
-                            placeholder="Пароль"
-                            error={passwordError}
-                        />
-            
-                        <ErrorField text={passwordError} />
-                    </div>
-            
-                    <Link to={routes.register} className={styles.link}>Зарегистрироваться</Link>
-            
-                    { renderButton() }
-                </>
-            );
-        } else {
-            return(
-                <>
-                    <Loading size="max" />
-                </>
-            );
-        }
-    }
-
-
     return(
         <>
-            { render() }
+            <div className={styles.headline}>Авторизация</div>
+                
+            <div className={styles.input}>
+                <TextInput
+                    type="text" 
+                    value={email}
+                    setValue={setEmail}
+                    placeholder="Email"
+                    error={emailError}
+                />
+    
+                <ErrorField text={emailError} />
+            </div>
+                    
+            <div className={styles.input}>
+                <TextInput
+                    type="password"
+                    value={password}
+                    setValue={setPassword}
+                    placeholder="Пароль"
+                    error={passwordError}
+                />
+    
+                <ErrorField text={passwordError} />
+            </div>
+    
+            <Link to={routes.register} className={styles.link}>Зарегистрироваться</Link>
+    
+            { renderButton() }
         </>
     );
 }

@@ -11,18 +11,48 @@ import styles from './ProfilePage.module.scss';
 function ProfilePage() {
     const [code, setCode] = useState(''),
           [codeError, setCodeError] = useState(''),
-          { isLogin, setIsLogin, loading, name, surname, email, confirmed, setConfirmed, progress } = useContext(AppContext),
+          { isDataLoaded, setIsDataLoaded,
+            name, setName,
+            surname, setSurname,
+            email, setEmail,
+            confirmed, setConfirmed,
+            progress, setProgress,
+            setFinish, setIsSuccess, setTypes, setDays, setWeek } = useContext(AppContext),
           navigate = useNavigate();
 
 
     useEffect(() => {
-        document.title = 'Профиль'; 
+        document.title = 'Профиль';
+
+        async function getUserData() {
+            const response = await fetch(`${url}api/user/user`, {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    'Accept': 'application/json'
+                }
+            });
+
+            if (response.status === 200) {
+                const json = await response.json();
+                setName(json.name);
+                setSurname(json.surname);
+                setEmail(json.email);
+                setConfirmed(json.confirmed);
+                setProgress(json.progress);
+                setFinish(json.finish);
+                setIsSuccess(json.finish ? '' : json.success);
+                setTypes(json.finish ? '' : json.types);
+                setDays(json.finish ? '' : json.days);
+                setWeek(json.finish ? '' : json.current_week);
+                setIsDataLoaded(true);
+            } else if (response.status === 401) {
+                navigate(routes.login);
+            }
+        }
+
+        if (!isDataLoaded) getUserData();
     }, []);
-
-
-    useEffect(() => {
-        if (!isLogin && !loading) navigate(routes.login);
-    }, [isLogin, loading]);
 
 
     const logout = () => {
@@ -33,7 +63,17 @@ function ProfilePage() {
             });
 
             if (response.ok || response.status === 401) {
-                setIsLogin(false);
+                setIsDataLoaded(false);
+                setName();
+                setSurname();
+                setEmail();
+                setConfirmed();
+                setProgress();
+                setFinish();
+                setIsSuccess();
+                setTypes();
+                setDays();
+                setWeek();
                 navigate(routes.login);
             }
         }
@@ -74,11 +114,22 @@ function ProfilePage() {
     const removeProfile = () => {
         async function connect() {
             const response = await fetch(`${url}api/user/remove`, {
-                methed: 'POST',
+                method: 'POST',
                 credentials: 'include',
             });
 
             if (response.ok) {
+                setIsDataLoaded(false);
+                setName();
+                setSurname();
+                setEmail();
+                setConfirmed();
+                setProgress();
+                setFinish();
+                setIsSuccess();
+                setTypes();
+                setDays();
+                setWeek();
                 navigate(routes.register);
             }
         }
@@ -113,7 +164,7 @@ function ProfilePage() {
 
 
     const render = () => {
-        if (loading) {
+        if (!isDataLoaded) {
             return(
                 <>
                     <Loading size="max" />

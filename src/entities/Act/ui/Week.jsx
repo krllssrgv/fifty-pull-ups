@@ -1,10 +1,15 @@
+import { useContext } from 'react';
 import classNames from 'classnames';
-import { url } from 'shared/index';
+import { AppContext } from 'app/AppProvider';
+import { url } from 'shared';
 import styles from './Week.module.scss';
 
 
 function Week(props) {
-    const { isSuccess, setIsSuccess, doneDays, week, setDisplayedAct, setPage } = props;
+    const { isSuccess, setIsSuccess, days, week } = useContext(AppContext),
+          { setDisplayedAct, setPage } = props,
+          doneDays=[days[0].done, days[1].done, days[2].done];
+          
 
     const confirmSuccess = (result) => {
         async function sendResult() {
