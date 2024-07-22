@@ -6,14 +6,14 @@ import { routes, url } from 'shared';
 import styles from './LoginForm.module.scss';
 
 
-function LoginForm() {
+function LoginForm(props) {
     const [loading, setLoading] = useState(false),
           [email, setEmail] = useState(''),
           [emailError, setEmailError] = useState(''),
           [password, setPassword] = useState(''),
-          [passwordError, setPasswordError] = useState('');
-
-    let navigate = useNavigate();
+          [passwordError, setPasswordError] = useState(''),
+          { setIsLogin } = props,
+          navigate = useNavigate();
 
 
     const login = () => {
@@ -36,6 +36,7 @@ function LoginForm() {
 
             if (response.ok) {
                 setLoading(false);
+                setIsLogin(true);
                 navigate(routes.main);
             } else {
                 setLoading(false);

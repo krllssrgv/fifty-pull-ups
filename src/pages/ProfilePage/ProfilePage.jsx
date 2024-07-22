@@ -1,53 +1,28 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import classNames from "classnames";
-import { Header } from "widgets";
+import { Header, Loading } from "widgets";
 import { url, routes } from "shared";
+import { AppContext } from "app/AppProvider";
 import { ConfirmButton, TextInput, ErrorField } from "widgets";
 import styles from './ProfilePage.module.scss';
 
 
 function ProfilePage() {
-    const [name, setName] = useState(''),
-          [surname, setSurname] = useState(''),
-          [email, setEmail] = useState(''),
-          [confirmed, setConfirmed] = useState(''),
-          [progress, setProgress] = useState(),
-
-          [code, setCode] = useState(''),
-          [codeError, setCodeError] = useState('');
-
-    const navigate = useNavigate();
+    const [code, setCode] = useState(''),
+          [codeError, setCodeError] = useState(''),
+          { isLogin, setIsLogin, loading, name, surname, email, confirmed, setConfirmed, progress } = useContext(AppContext),
+          navigate = useNavigate();
 
 
     useEffect(() => {
-        document.title = 'Профиль';
-
-        async function getUserData() {
-            const response = await fetch(`${url}api/user/user`, {
-                method: 'GET',
-                credentials: 'include',
-                headers: {
-                    'Accept': 'application/json'
-                }
-            });
-
-            if (response.ok) {
-                const json = await response.json();
-                setName(json.name);
-                setSurname(json.surname);
-                setEmail(json.email);
-                setProgress(json.progress);
-                setConfirmed(json.confirmed);
-            } else {
-                if (response.status === 401) {
-                    navigate(routes.login);
-                }
-            }
-        }
-
-        getUserData();        
+        document.title = 'Профиль'; 
     }, []);
+
+
+    useEffect(() => {
+        if (!isLogin) navigate(routes.login);
+    }, [isLogin]);
 
 
     const logout = () => {
@@ -57,9 +32,8 @@ function ProfilePage() {
                 credentials: 'include'
             });
 
-            if (response.ok) {
-                navigate(routes.login);
-            } else {
+            if (response.ok || response.status === 401) {
+                setIsLogin(false);
                 navigate(routes.login);
             }
         }
@@ -138,20 +112,37 @@ function ProfilePage() {
     }
 
 
+    const render = () => {
+        if (loading) {
+            return(
+                <>
+                    <Loading size="max" />
+                </>
+            );
+        } else {
+            return(
+                <>
+                    <Header progress={progress} name={name} />
+                    { renderCheck() }
+                    <div className={styles.container}>
+                        <div className={styles.data}>{name} {surname}</div>
+                        <div className={styles.email}>{email}</div>
+                        <div className={styles.exit}>
+                            <ConfirmButton text='Выйти' func={logout} />
+                        </div>
+                        <div className={styles.remove} onClick={removeProfile}>Удалить аккаунт</div>
+                    </div>
+                </>
+            );
+        }
+    }
+
+
     return(
         <>
-            <Header progress={progress} name={name} />
-            { renderCheck() }
-            <div className={styles.container}>
-                <div className={styles.data}>{name} {surname}</div>
-                <div className={styles.email}>{email}</div>
-                <div className={styles.exit}>
-                    <ConfirmButton text='Выйти' func={logout} />
-                </div>
-                <div className={styles.remove} onClick={removeProfile}>Удалить аккаунт</div>
-            </div>
+            { render() }
         </>
-    );
+    )
 }
 
 export default ProfilePage;

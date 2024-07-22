@@ -1,29 +1,23 @@
-import { useEffect } from 'react';
+import { useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { RegisterForm, AuthContainer } from 'features';
-import { url, routes } from 'shared';
+import { AppContext } from 'app/AppProvider';
+import { routes } from 'shared';
 
 
 function RegPage() {
-    let navigate = useNavigate();
+    const navigate = useNavigate(),
+          { isLogin } = useContext(AppContext);
 
 
     useEffect(() => {
         document.title = 'Регистрация';
-
-        async function checkLogin() {
-            const response = await fetch(`${url}api/user/check_login`, {
-                method: 'GET',
-                credentials: 'include'
-            });
-
-            if (response.ok) {
-                navigate(routes.main);
-            }
-        }
-
-        checkLogin();
     }, []);
+
+
+    useEffect(() => {
+        if (isLogin) navigate(routes.main);
+    }, [isLogin]);
 
 
     return(

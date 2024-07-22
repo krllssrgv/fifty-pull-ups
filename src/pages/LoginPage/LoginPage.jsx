@@ -1,34 +1,28 @@
-import { useEffect } from 'react';
+import { useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { LoginForm, AuthContainer } from 'features';
-import { url, routes } from 'shared';
+import { AppContext } from 'app/AppProvider';
+import { routes } from 'shared';
 
 
 function LoginPage() {
-    const navigate = useNavigate();
+    const navigate = useNavigate(),
+          { isLogin, setIsLogin } = useContext(AppContext);
 
 
     useEffect(() => {
         document.title = 'Авторизация';
-
-        async function checkLogin() {
-            const response = await fetch(`${url}api/user/check_login`,{
-                method: 'GET',
-                credentials: 'include'
-            });
-
-            if (response.ok) {
-                navigate(routes.main);
-            }
-        }
-
-        checkLogin();
     }, []);
+
+
+    useEffect(() => {
+        if (isLogin) navigate(routes.main);
+    }, [isLogin]);
 
 
     return(
         <AuthContainer>
-            <LoginForm />
+            <LoginForm setIsLogin={setIsLogin} />
         </AuthContainer>
     );
 }
