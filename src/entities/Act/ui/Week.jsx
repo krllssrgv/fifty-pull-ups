@@ -36,28 +36,31 @@ function Week(props) {
 
 
     const renderSuccess = () => {
-        if (isSuccess === '0') {
-            return(
-                <div className={styles.success}>
-                    <div className={styles.question}>Получилось ли выполнить указанное количество подтягиваний за эту неделю?</div>
-                    <div className={styles.buttons}>
-                        <div className={classNames(styles.btn, styles.false)} onClick={() => confirmSuccess(false)}>Нет</div>
-                        <div className={classNames(styles.btn, styles.true)} onClick={() => confirmSuccess(true)}>Да</div>
+        switch(isSuccess) {
+            case '0':
+                return(
+                    <div className={styles.success}>
+                        <div className={styles.question}>Получилось ли выполнить указанное количество подтягиваний за эту неделю?</div>
+                        <div className={styles.buttons}>
+                            <div className={classNames(styles.btn, styles.false)} onClick={() => confirmSuccess(false)}>Нет</div>
+                            <div className={classNames(styles.btn, styles.true)} onClick={() => confirmSuccess(true)}>Да</div>
+                        </div>
                     </div>
-                </div>
-            );
-        } else if (isSuccess === '1') {
-            return(
-                <div className={styles.success}>
-                    Вы подтвердили, что смогли выполнить указанное количество подтягиваний за эту неделю. Тренировки следующей недели будут доступны в понедельник.
-                </div>
-            );
-        } else if (isSuccess === '-1') {
-            return(
-                <div className={styles.success}>
-                    Вы не смогли выполнить указанное количество подтягиваний за эту неделю. На следующей неделе необходимо повторить программу текущей недели. В понедельник тренировки будут обновлены.
-                </div>
-            );
+                );
+            case '1':
+                return(
+                    <div className={styles.success}>
+                        Вы подтвердили, что смогли выполнить указанное количество подтягиваний за эту неделю. Тренировки следующей недели будут доступны в понедельник.
+                    </div>
+                );
+            case '-1':
+                return(
+                    <div className={styles.success}>
+                        Вы не смогли выполнить указанное количество подтягиваний за эту неделю. На следующей неделе необходимо повторить программу текущей недели. В понедельник тренировки будут обновлены.
+                    </div>
+                );
+            default:
+                return(<></>);
         }
     }
 

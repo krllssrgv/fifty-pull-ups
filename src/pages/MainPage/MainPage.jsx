@@ -84,6 +84,18 @@ function MainPage() {
     }
 
 
+    useEffect(() => {
+        let check = true;
+        if (days) {
+            days.forEach((e) => {
+                if (!e.done) check = false;
+            });
+            
+            if (check) setIsSuccess('0');
+        }
+    }, [days]);
+
+
     const render = () => {
         if (isDataLoaded) {
             if (finish) {
