@@ -11,13 +11,7 @@ import styles from './ProfilePage.module.scss';
 function ProfilePage() {
     const [code, setCode] = useState(''),
           [codeError, setCodeError] = useState(''),
-          { isDataLoaded, setIsDataLoaded,
-            name, setName,
-            surname, setSurname,
-            email, setEmail,
-            confirmed, setConfirmed,
-            progress, setProgress,
-            setFinish, setIsSuccess, setTypes, setDays, setWeek } = useContext(AppContext),
+          { state, dispatch } = useContext(AppContext),
           navigate = useNavigate();
 
 
@@ -35,23 +29,38 @@ function ProfilePage() {
 
             if (response.status === 200) {
                 const json = await response.json();
-                setName(json.name);
-                setSurname(json.surname);
-                setEmail(json.email);
-                setConfirmed(json.confirmed);
-                setProgress(json.progress);
-                setFinish(json.finish);
-                setIsSuccess(json.finish ? '' : json.success);
-                setTypes(json.finish ? '' : json.types);
-                setDays(json.finish ? '' : json.days);
-                setWeek(json.finish ? '' : json.current_week);
-                setIsDataLoaded(true);
+                dispatch({
+                    type: 'SET_USER',
+                    payload: {
+                        name: json.name,
+                        surname: json.surname,
+                        email: json.email,
+                        confirmed: json.confirmed,
+                        progress: json.progress,
+                        finish: json.finish,
+                        isSuccess: String(json.success),
+                    }
+                });
+
+                dispatch({
+                    type: 'SET_ACTS',
+                    payload: {
+                        types: json.finish ? '' : json.types,
+                        days: json.finish ? '' : json.days,
+                        week: json.finish ? '' : json.current_week
+                    }
+                });
+
+                dispatch({
+                    type: 'SET_DATA_LOADED',
+                    payload: true
+                });
             } else if (response.status === 401) {
                 navigate(routes.login);
             }
         }
 
-        if (!isDataLoaded) getUserData();
+        if (!state.isDataLoaded) getUserData();
     }, []);
 
 
@@ -63,17 +72,7 @@ function ProfilePage() {
             });
 
             if (response.ok || response.status === 401) {
-                setIsDataLoaded(false);
-                setName();
-                setSurname();
-                setEmail();
-                setConfirmed();
-                setProgress();
-                setFinish();
-                setIsSuccess();
-                setTypes();
-                setDays();
-                setWeek();
+                dispatch({type: 'RESET_STATE'});
                 navigate(routes.login);
             }
         }
@@ -96,7 +95,13 @@ function ProfilePage() {
             });
 
             if (response.status === 204) {
-                setConfirmed(true);
+                dispatch({
+                    type: 'SET_USER',
+                    payload: {
+                        ...state.user,
+                        confirmed: true
+                    }
+                })
             } else if (response.status === 401) {
                 navigate(routes.login);
             } else if (response.status === 400) {
@@ -119,18 +124,7 @@ function ProfilePage() {
             });
 
             if (response.ok) {
-                setIsDataLoaded(false);
-                setName();
-                setSurname();
-                setEmail();
-                setConfirmed();
-                setProgress();
-                setFinish();
-                setIsSuccess();
-                setTypes();
-                setDays();
-                setWeek();
-                navigate(routes.register);
+                dispatch({type: 'RESET_STATE'});
             }
         }
 
@@ -139,7 +133,7 @@ function ProfilePage() {
 
 
     const renderCheck = () => {
-        if (confirmed) {
+        if (state.user.confirmed) {
             return(<></>);
         } else {
             return(
@@ -164,7 +158,7 @@ function ProfilePage() {
 
 
     const render = () => {
-        if (!isDataLoaded) {
+        if (!state.isDataLoaded) {
             return(
                 <>
                     <Loading size="max" />
@@ -173,11 +167,11 @@ function ProfilePage() {
         } else {
             return(
                 <>
-                    <Header progress={progress} name={name} />
+                    <Header progress={state.user.progress} name={state.user.name} />
                     { renderCheck() }
                     <div className={styles.container}>
-                        <div className={styles.data}>{name} {surname}</div>
-                        <div className={styles.email}>{email}</div>
+                        <div className={styles.data}>{state.user.name} {state.user.surname}</div>
+                        <div className={styles.email}>{state.user.email}</div>
                         <div className={styles.exit}>
                             <ConfirmButton text='Выйти' func={logout} />
                         </div>

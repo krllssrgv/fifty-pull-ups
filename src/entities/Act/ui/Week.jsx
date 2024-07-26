@@ -6,14 +6,21 @@ import styles from './Week.module.scss';
 
 
 function Week(props) {
-    const { isSuccess, setIsSuccess, days, week } = useContext(AppContext),
+    const { state, dispatch } = useContext(AppContext),
           { setDisplayedAct, setPage } = props,
-          doneDays=[days[0].done, days[1].done, days[2].done];
+          doneDays=[state.acts.days[0].done, state.acts.days[1].done, state.acts.days[2].done];
           
 
     const confirmSuccess = (result) => {
         async function sendResult() {
-            setIsSuccess('');
+            dispatch({
+                type: 'SET_USER',
+                payload: {
+                    ...state.user,
+                    isSuccess: ''
+                }
+            });
+
             const response = await fetch(`${url}api/act/send_result`, {
                 method: 'POST',
                 credentials: 'include',
@@ -25,7 +32,14 @@ function Week(props) {
 
             if (response.ok) {
                 const json = await response.json();
-                setIsSuccess(json.success);
+                console.log(json)
+                dispatch({
+                    type: 'SET_USER',
+                    payload: {
+                        ...state.user,
+                        isSuccess: json.success
+                    }
+                });
             } else {
                 console.log(response.status);
             }
@@ -36,7 +50,7 @@ function Week(props) {
 
 
     const renderSuccess = () => {
-        switch(isSuccess) {
+        switch(state.user.isSuccess) {
             case '0':
                 return(
                     <div className={styles.success}>
@@ -69,7 +83,7 @@ function Week(props) {
         <div className={styles.container}>
             <div className={styles.headline}>Ваша текущая неделя</div>
 
-            <div className={styles.subheadline}>Номер по программе - {week + 1}</div>
+            <div className={styles.subheadline}>Неделя №{state.acts.week + 1}</div>
 
             <div className={styles.subheadline}>Тренировки:</div>
 
