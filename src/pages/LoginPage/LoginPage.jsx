@@ -1,17 +1,18 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { LoginForm, AuthContainer } from 'features';
-import { Loading } from 'widgets';
-import { routes, url } from 'shared';
+import { LoginForm } from '@widgets';
+import { routes, url, Loading, AuthContainer } from '@shared';
 
 
 function LoginPage() {
-    const navigate = useNavigate(),
-          [loading, setLoading] = useState(true);
+    const navigate = useNavigate();
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         document.title = 'Авторизация';
+    }, []);
 
+    useEffect(() => {
         async function checkLogin() {
             const response = await fetch(`${url}api/user/check_login`, {
                 method: 'GET',
@@ -30,28 +31,15 @@ function LoginPage() {
     }, []);
 
 
-    const render = () => {
-        if (loading) {
-            return(
-                <>
-                    <Loading size="max" />
-                </>
-            );
-        } else {
-            return(
-                <AuthContainer>
-                    <LoginForm />
-                </AuthContainer>
-            );
-        }
+    if (loading) {
+        return(<Loading size="max" />);
+    } else {
+        return(
+            <AuthContainer>
+                <LoginForm />
+            </AuthContainer>
+        );
     }
-
-
-    return(
-        <>
-            { render() }
-        </>
-    );
 }
 
 export default LoginPage;

@@ -1,26 +1,24 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { TextInput, ConfirmButton, ErrorField, Loading } from 'widgets';
-import { routes, url } from 'shared';
+import { routes, url, TextInput, ConfirmButton, ErrorField, Loading } from '@shared';
 import styles from './LoginForm.module.scss';
 
 
-function LoginForm(props) {
-    const [loading, setLoading] = useState(false),
-          [email, setEmail] = useState(''),
-          [emailError, setEmailError] = useState(''),
-          [password, setPassword] = useState(''),
-          [passwordError, setPasswordError] = useState(''),
-          navigate = useNavigate();
+function LoginForm() {
+    const [loading, setLoading] = useState(false);
+    const [email, setEmail] = useState('');
+    const [emailError, setEmailError] = useState('');
+    const [password, setPassword] = useState('');
+    const [passwordError, setPasswordError] = useState('');
+    const navigate = useNavigate();
 
 
-    const login = () => {
+    const login = async () => {
         setEmailError('');
         setPasswordError('');
         setLoading(true);
 
-        async function connect() {
-            const response = await fetch(`${url}api/user/login`, {
+        const response = await fetch(`${url}api/user/login`, {
                 method: "POST",
                 credentials: 'include',
                 headers: {
@@ -30,12 +28,12 @@ function LoginForm(props) {
                     email: email,
                     password: password
                 })
-            });
+        });
 
-            if (response.ok) {
+        if (response.ok) {
                 setLoading(false);
                 navigate(routes.main);
-            } else {
+        } else {
                 setLoading(false);
                 if (response.status === 401) {
                     const json = await response.json();
@@ -45,10 +43,7 @@ function LoginForm(props) {
                 } else {
                     console.log(response.status);
                 }
-            }
         }
-        
-        connect();
     }
 
 

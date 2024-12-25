@@ -1,0 +1,1 @@
+export { default as Acts } from './ui/Acts';

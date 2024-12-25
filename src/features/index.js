@@ -1,1 +1,0 @@
-export { LoginForm, RegisterForm, AuthContainer } from './Auth/index';

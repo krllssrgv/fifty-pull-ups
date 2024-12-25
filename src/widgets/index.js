@@ -1,5 +1,4 @@
-export { default as Header } from './Header/Header';
-export { default as TextInput } from './TextInput/TextInput';
-export { default as ConfirmButton } from './ConfirmButton/ConfirmButton';
-export { default as ErrorField } from './ErrorField/ErrorField';
-export { default as Loading } from './Loading/Loading';
+export { Acts } from './Acts';
+export { Week } from './Week';
+export { LoginForm } from './LoginForm';
+export { RegisterForm } from './RegisterForm';

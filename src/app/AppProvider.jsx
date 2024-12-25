@@ -1,4 +1,4 @@
-import { useState, createContext, useReducer } from "react";
+import { createContext, useReducer } from "react";
 
 const AppContext = createContext();
 
@@ -46,4 +46,4 @@ function AppProvider(props) {
     );
 }
 
-export { AppContext, AppProvider};
+export { AppContext, AppProvider };
