@@ -5,7 +5,7 @@ import { Loading } from 'widgets';
 import { routes, url } from 'shared';
 
 
-function RegPage() {
+function RegistrationPage() {
     const navigate = useNavigate(),
           [loading, setLoading] = useState(true);
 
@@ -55,4 +55,4 @@ function RegPage() {
     );
 }
 
-export default RegPage;
+export default RegistrationPage;

@@ -1,12 +1,10 @@
 import { Suspense } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { routes } from 'shared';
-import { MainPage, ProfilePage, RegPage, LoginPage } from 'pages';
-import { AppProvider } from './AppProvider';
+import { MainPage, ProfilePage, RegPage, LoginPage } from '@pages';
+import { routes, AppProvider } from '@shared';
 import './App.css';
 
-
-function App() {
+export const App = () => {
     return(
         <AppProvider>
             <Suspense fallback={<></>}>
@@ -22,5 +20,3 @@ function App() {
         </AppProvider>
     );
 }
-
-export default App;

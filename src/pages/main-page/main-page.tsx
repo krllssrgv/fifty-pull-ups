@@ -4,8 +4,7 @@ import { Header, Loading } from "widgets";
 import { url, routes } from "shared";
 import { AppContext } from "app/AppProvider";
 import { Week, Acts } from "entities/index";
-import styles from './MainPage.module.scss';
-import { type } from "@testing-library/user-event/dist/type";
+import styles from './main-page.module.scss';
 
 
 function MainPage() {

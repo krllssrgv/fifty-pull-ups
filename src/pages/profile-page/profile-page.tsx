@@ -5,7 +5,7 @@ import { Header, Loading } from "widgets";
 import { url, routes } from "shared";
 import { AppContext } from "app/AppProvider";
 import { ConfirmButton, TextInput, ErrorField } from "widgets";
-import styles from './ProfilePage.module.scss';
+import styles from './profile-page.module.scss';
 
 
 function ProfilePage() {
