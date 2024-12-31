@@ -1,9 +1,9 @@
 import classNames from 'classnames';
 import loadingImg from 'assets/img/loading.png';
-import styles from './Loading.module.scss';
+import styles from './loading.module.scss';
 
 
-function Loading(props) {
+export const Loading = (props) => {
     let targetClass;
 
     if (props.size === 'max') {
@@ -21,5 +21,3 @@ function Loading(props) {
         </div>
     );
 }
-
-export default Loading;

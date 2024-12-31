@@ -4,7 +4,7 @@ import { TextInput, ConfirmButton, ErrorField, Loading } from 'widgets';
 import { routes, url } from 'shared';
 import styles from './RegisterForm.module.scss';
 
-function RegisterForm(props) {
+export const RegisterForm = (props) => {
     const [loading, setLoading] = useState(false),
           [name, setName] = useState(''),
           [nameError, setNameError] = useState(''),
@@ -143,5 +143,3 @@ function RegisterForm(props) {
         </>
     );
 }
-
-export default RegisterForm;

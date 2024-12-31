@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom';
 import { routes } from 'shared';
-import styles from './Header.module.scss';
+import styles from './header.module.scss';
 
-function Header(props) {
+export const Header = (props) => {
     const {name, progress} = props;
 
     return(
@@ -23,5 +23,3 @@ function Header(props) {
         </header>
     );
 }
-
-export default Header;

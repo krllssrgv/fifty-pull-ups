@@ -1,14 +1,13 @@
 // config
-export { default as routes } from './config/routes';
-export { default as url } from './config/url';
+export { routes, url } from './config/config';
 
 // ui
-export { default as Header } from './Header/Header';
-export { default as TextInput } from './TextInput/TextInput';
-export { default as ConfirmButton } from './ConfirmButton/ConfirmButton';
-export { default as ErrorField } from './ErrorField/ErrorField';
-export { default as Loading } from './Loading/Loading';
-export { AuthContainer } from './ui/AuthContainer';
+export { Header } from './ui/header';
+export { TextInput } from './ui/text-input';
+export { ConfirmButton } from './ui/confirm-button';
+export { ErrorField } from './ui/error-field';
+export { Loading } from './ui/loading';
+export { AuthContainer } from './ui/auth-container';
 
 // assets
 export { default as narrowGrip } from './assets/img/1.png';

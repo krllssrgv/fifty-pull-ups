@@ -23,7 +23,7 @@
     "noUncheckedSideEffectImports": true,
     "baseUrl": "./",
     "paths": {
-      "@app": ["src/app/App"],
+      "@app": ["src/app/app"],
       "@pages": ["src/pages/index"],
       "@widgets": ["src/widgets/index"],
       "@features": ["src/features/index"],

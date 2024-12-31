@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { routes, url, TextInput, ConfirmButton, ErrorField, Loading } from '@shared';
-import styles from './LoginForm.module.scss';
+import styles from './login-form.module.scss';
 
 
-function LoginForm() {
+export const LoginForm = () => {
     const [loading, setLoading] = useState(false);
     const [email, setEmail] = useState('');
     const [emailError, setEmailError] = useState('');
@@ -90,5 +90,3 @@ function LoginForm() {
         </>
     );
 }
-
-export default LoginForm;

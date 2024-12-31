@@ -10,10 +10,10 @@ import turner from 'assets/img/turner.png';
 
 import { default as properties } from '../model/properties';
 
-import styles from './Acts.module.scss';
+import styles from './acts.module.scss';
 
 
-function Acts(props) {
+export const Acts = (props) => {
     const { day, types, postDone, page, setPage } = props,
           displayedImg = {
               straight: straightImg,
@@ -75,5 +75,3 @@ function Acts(props) {
         </>
     );
 }
-
-export default Acts;

@@ -2,10 +2,10 @@ import { useContext } from 'react';
 import classNames from 'classnames';
 import { AppContext } from 'app/AppProvider';
 import { url } from 'shared';
-import styles from './Week.module.scss';
+import styles from './week.module.scss';
 
 
-function Week(props) {
+export const Week = (props) => {
     const { state, dispatch } = useContext(AppContext),
           { setDisplayedAct, setPage } = props,
           doneDays=[state.acts.days[0].done, state.acts.days[1].done, state.acts.days[2].done];
@@ -114,5 +114,3 @@ function Week(props) {
         </div>
     );
 }
-
-export default Week;

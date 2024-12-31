@@ -1,7 +1,7 @@
-import styles from './ConfirmButton.module.scss';
+import styles from './confirm-button.module.scss';
 
 
-function ConfirmButton(props) {
+export const ConfirmButton = (props) => {
     const { text, func } = props;
 
     return(
@@ -10,5 +10,3 @@ function ConfirmButton(props) {
         </button>
     );
 }
-
-export default ConfirmButton;
