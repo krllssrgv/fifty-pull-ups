@@ -11,6 +11,7 @@ export default defineConfig({
   resolve: {
     alias: {
     '@app': path.resolve(__dirname, './src/app/app'),
+    '@processes': path.resolve(__dirname, './src/processes/index'),
     '@pages': path.resolve(__dirname, './src/pages/index'),
     '@widgets': path.resolve(__dirname, './src/widgets/index'),
     '@features': path.resolve(__dirname, './src/features/index'),
@@ -21,7 +22,7 @@ export default defineConfig({
   css: {
     preprocessorOptions: {
       scss: {
-        additionalData: `@use "src/shared/config/variables.scss" as *;`,
+        additionalData: `@use "./src/shared/config/colors.scss" as *;`,
       },
     },
   },

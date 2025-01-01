@@ -7,7 +7,6 @@ export { TextInput } from './ui/text-input';
 export { ConfirmButton } from './ui/confirm-button';
 export { ErrorField } from './ui/error-field';
 export { Loading } from './ui/loading';
-export { AuthContainer } from './ui/auth-container';
 
 // assets
 export { default as narrowGrip } from './assets/img/1.png';
