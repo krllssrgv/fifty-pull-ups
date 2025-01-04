@@ -1,1 +1,1 @@
-export { ConfirmButton } from './ui/confirm-button';
+export { ConfirmButton } from './confirm-button';

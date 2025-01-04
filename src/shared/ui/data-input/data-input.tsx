@@ -27,7 +27,12 @@ export const DataInput = ({
         onChange={(e) => setValue(e.target.value)}
         placeholder={placeholder}
       />
-      <div className={classNames(styles.border, error ? styles.border_error : null)}></div>
+      <div
+        className={classNames(
+          styles.border,
+          error ? styles.border_error : null
+        )}
+      ></div>
       <div className={styles.error}>{error}</div>
     </div>
   );

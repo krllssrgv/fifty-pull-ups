@@ -1,5 +1,6 @@
 // config
-export { routes, url } from './config/config';
+export { routes, URL } from './config/config';
+export const url = 'http://127.0.0.1:5000/';
 
 // ui
 export { DataInput } from './ui/data-input';

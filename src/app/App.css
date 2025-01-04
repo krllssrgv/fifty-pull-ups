@@ -17,7 +17,7 @@
   --main: #474a59;
   --green: #77e600;
   --violet: #8a2be2;
-  --grad: linear-gradient(90deg, #ffa602,#ff168d,#8227ff);
+  --grad: linear-gradient(90deg, #ffa602, #ff168d, #8227ff);
 }
 
 * {

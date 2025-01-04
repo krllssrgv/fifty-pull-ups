@@ -1,10 +1,9 @@
 import { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import classNames from 'classnames';
-import { Header, Loading } from 'widgets';
-import { url, routes } from 'shared';
-import { AppContext } from 'app/AppProvider';
-import { ConfirmButton, TextInput, ErrorField } from 'widgets';
+import { Header } from '@widgets';
+import { url, routes, AppContext } from '@shared';
+import { ConfirmButton } from '@shared';
 import styles from './profile-page.module.scss';
 
 function ProfilePage() {

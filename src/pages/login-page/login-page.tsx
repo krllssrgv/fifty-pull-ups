@@ -1,39 +1,15 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 import { LoginForm } from '@widgets';
-import { routes, url, Loading } from '@shared';
+import styles from './login-page.module.scss';
 
-function LoginPage() {
-  const navigate = useNavigate();
-  const [loading, setLoading] = useState(true);
-
+export const LoginPage = () => {
   useEffect(() => {
     document.title = 'Авторизация';
   }, []);
 
-  useEffect(() => {
-    async function checkLogin() {
-      const response = await fetch(`${url}api/user/check_login`, {
-        method: 'GET',
-        credentials: 'include',
-      });
-
-      if (response.ok) {
-        setLoading(false);
-        navigate(routes.main);
-      } else {
-        setLoading(false);
-      }
-    }
-
-    checkLogin();
-  }, []);
-
-  if (loading) {
-    return <Loading size="max" />;
-  } else {
-    return <LoginForm />;
-  }
-}
-
-export default LoginPage;
+  return (
+    <div className={styles.window}>
+      <LoginForm />
+    </div>
+  );
+};

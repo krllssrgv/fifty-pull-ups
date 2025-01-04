@@ -1,1 +1,1 @@
-export { DataInput } from './ui/data-input';
+export { DataInput } from './data-input';
