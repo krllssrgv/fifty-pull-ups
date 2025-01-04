@@ -1,0 +1,24 @@
+.background {
+  min-height: 100vh;
+  width: 100%;
+  background-color: var(--grey);
+}
+
+.window {
+  width: 360px;
+  padding: 25px;
+  border-radius: 17px;
+  margin: 0 auto;
+  transform: translateY(40px);
+  background-color: var(--main);
+}
+
+@media screen and (max-width: 1024px) {
+  .window {
+    width: 90%;
+    max-width: 350px;
+    padding: 12px;
+    border-radius: 3px;
+    transform: translateY(30px);
+  }
+}

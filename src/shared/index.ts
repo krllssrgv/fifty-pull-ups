@@ -2,10 +2,8 @@
 export { routes, url } from './config/config';
 
 // ui
-export { Header } from './ui/header';
-export { TextInput } from './ui/text-input';
+export { DataInput } from './ui/data-input';
 export { ConfirmButton } from './ui/confirm-button';
-export { ErrorField } from './ui/error-field';
 export { Loading } from './ui/loading';
 
 // assets

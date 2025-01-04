@@ -1,7 +1,6 @@
 import { useContext } from 'react';
 import classNames from 'classnames';
-import { AppContext } from 'app/AppProvider';
-import { url } from 'shared';
+import { url, AppContext } from '@shared';
 import styles from './week.module.scss';
 
 export const Week = (props) => {

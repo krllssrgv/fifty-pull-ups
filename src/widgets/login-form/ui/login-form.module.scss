@@ -1,32 +1,35 @@
-@import '../../../shared/styles/colors.scss';
-
-.container {
-  width: 90%;
-  max-width: 400px;
-  padding: 10px;
-  border: 3px solid $main-violet;
-  border-radius: 8px;
-  margin: 20px auto;
-}
-
 .headline {
-  font-size: 24px;
+  font-size: 30px;
   font-weight: bold;
   text-align: center;
   margin-bottom: 30px;
+  color: #fff;
 }
 
-.input {
+.inputs {
   display: flex;
   flex-direction: column;
-  gap: 5px;
-  margin-bottom: 10px;
+  gap: 20px;
 }
 
 .link {
   display: block;
-  color: $main-violet;
+  color: #fff;
   text-decoration: none;
-  margin-bottom: 10px;
-  font-size: 14px;
+  margin: 25px 0 15px 0;
+  font-size: 16px;
+}
+
+@media screen and (max-width: 1024px) {
+  .headline {
+    font-size: 24px;
+  }
+
+  .inputs {
+    gap: 10px;
+  }
+
+  .link {
+    font-size: 15px;
+  }
 }

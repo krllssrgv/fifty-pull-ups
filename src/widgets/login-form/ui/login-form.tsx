@@ -1,13 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import {
-  routes,
-  url,
-  TextInput,
-  ConfirmButton,
-  ErrorField,
-  Loading,
-} from '@shared';
+import { routes, url, DataInput, ConfirmButton } from '@shared';
 import styles from './login-form.module.scss';
 
 export const LoginForm = () => {
@@ -51,20 +44,13 @@ export const LoginForm = () => {
     }
   };
 
-  const renderButton = () => {
-    if (loading) {
-      return <Loading size={'min'} />;
-    } else {
-      return <ConfirmButton text="Войти" func={login} />;
-    }
-  };
-
   return (
-    <div className={styles.container}>
+    <>
       <div className={styles.headline}>Авторизация</div>
 
-      <div className={styles.input}>
-        <TextInput
+      <div className={styles.inputs}>
+        <DataInput
+          extraClassName={styles.text_input}
           type="text"
           value={email}
           setValue={setEmail}
@@ -72,26 +58,24 @@ export const LoginForm = () => {
           error={emailError}
         />
 
-        <ErrorField text={emailError} />
-      </div>
-
-      <div className={styles.input}>
-        <TextInput
+        <DataInput
           type="password"
           value={password}
           setValue={setPassword}
           placeholder="Пароль"
           error={passwordError}
         />
-
-        <ErrorField text={passwordError} />
       </div>
 
       <Link to={routes.registration} className={styles.link}>
         Зарегистрироваться
       </Link>
 
-      {renderButton()}
-    </div>
+      <ConfirmButton
+        text="Войти"
+        onClick={login}
+        loading={loading}
+      />
+    </>
   );
 };

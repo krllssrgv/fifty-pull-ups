@@ -1,9 +1,7 @@
-@import '../../../shared/styles/colors.scss';
-
 .container {
   width: 96%;
   max-width: 600px;
-  background-color: $main-violet;
+  background-color: var(--main);
   margin: 30px auto 15px auto;
   border-radius: 8px;
   padding: 8px;
@@ -28,7 +26,7 @@
 }
 
 .act {
-  background-color: $green;
+  background-color: var(--green);
   width: 30%;
   border-radius: 5px;
   font-size: 17px;
@@ -42,7 +40,7 @@
 
 .active {
   background-color: white;
-  color: $main-violet;
+  color: var(--main);
 }
 
 .success {
@@ -81,7 +79,7 @@
 }
 
 .true {
-  background-color: $green;
+  background-color: var(--green);
 }
 
 .false {

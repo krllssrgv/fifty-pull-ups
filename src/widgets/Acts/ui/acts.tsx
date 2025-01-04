@@ -1,24 +1,28 @@
 import classNames from 'classnames';
-
-import { ConfirmButton } from 'widgets';
-
-import narrowImg from 'assets/img/1.png';
-import straightImg from 'assets/img/2.png';
-import wideImg from 'assets/img/3.png';
-import reverseImg from 'assets/img/4.png';
-import turner from 'assets/img/turner.png';
-
-import { default as properties } from '../model/properties';
-
+import {
+  ConfirmButton,
+  narrowGrip,
+  directGrip,
+  wideGrip,
+  reverseGrip,
+  turner,
+} from '@shared';
 import styles from './acts.module.scss';
 
 export const Acts = (props) => {
+  const properties = {
+    straight: 'Прямой хват',
+    narrow: 'Узкий хват',
+    wide: 'Широкий хват',
+    reverse: 'Обратный хват',
+  };
+
   const { day, types, postDone, page, setPage } = props,
     displayedImg = {
-      straight: straightImg,
-      narrow: narrowImg,
-      wide: wideImg,
-      reverse: reverseImg,
+      straight: directGrip,
+      narrow: narrowGrip,
+      wide: wideGrip,
+      reverse: reverseGrip,
     };
 
   const turn = (direction) => {

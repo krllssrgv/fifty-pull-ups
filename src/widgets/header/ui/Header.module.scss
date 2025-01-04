@@ -1,5 +1,3 @@
-@import '../../shared/styles/colors.scss';
-
 header {
   min-width: 320px;
   width: 100%;
@@ -37,13 +35,13 @@ header {
 .line {
   height: 12px;
   width: 100%;
-  border: 1px solid $main-violet;
+  border: 1px solid var(--main);
   border-radius: 2px;
 }
 
 .done {
   height: 100%;
-  background-color: $green;
+  background-color: var(--green);
 }
 
 .profile {
@@ -61,7 +59,7 @@ header {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background-color: $main-violet;
+  background-color: var(--main);
 }
 
 .name {

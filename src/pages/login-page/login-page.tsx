@@ -32,7 +32,7 @@ function LoginPage() {
   if (loading) {
     return <Loading size="max" />;
   } else {
-    return <LoginForm />
+    return <LoginForm />;
   }
 }
 

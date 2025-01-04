@@ -1,9 +1,7 @@
 import { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Header, Loading } from 'widgets';
-import { url, routes } from 'shared';
-import { AppContext } from 'app/AppProvider';
-import { Week, Acts } from 'entities/index';
+import { Week, Acts, Header } from '@widgets';
+import { url, routes, Loading, AppContext } from '@shared';
 import styles from './main-page.module.scss';
 
 function MainPage() {

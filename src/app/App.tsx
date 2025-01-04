@@ -13,14 +13,11 @@ export const App = () => {
           <Routes>
             <Route path="auth" element={<AuthContainer />}>
               <Route index element={<LoginPage />} />
-              <Route
-                path={routes.registration}
-                element={<RegistrationPage />}
-              />
+              <Route path="registration" element={<RegistrationPage />} />
             </Route>
             <Route path={routes.main} element={<MainPage />} />
             <Route path={routes.profile} element={<ProfilePage />} />
-            <Route path="*" element={<Navigate to="auth" />} />
+            <Route path="*" element={<Navigate to={routes.login} replace />} />
           </Routes>
         </BrowserRouter>
       </Suspense>

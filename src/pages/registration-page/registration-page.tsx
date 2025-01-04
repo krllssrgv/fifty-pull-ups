@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { RegisterForm, AuthContainer } from 'features';
-import { Loading } from 'widgets';
-import { routes, url } from 'shared';
+import { RegisterForm } from '@widgets';
+import { routes, url, Loading } from '@shared';
 
 function RegistrationPage() {
   const navigate = useNavigate(),
@@ -36,11 +35,7 @@ function RegistrationPage() {
         </>
       );
     } else {
-      return (
-        <AuthContainer>
-          <RegisterForm />
-        </AuthContainer>
-      );
+      return <RegisterForm />;
     }
   };
 

@@ -1,8 +1,13 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { routes, url, TextInput, ConfirmButton, ErrorField, Loading } from '@shared';
+import {
+  routes,
+  url,
+  DataInput,
+  ConfirmButton,
+  Loading,
+} from '@shared';
 import styles from './registration-form.module.scss';
-
 
 export const RegisterForm = () => {
   const [loading, setLoading] = useState(false),
@@ -75,8 +80,8 @@ export const RegisterForm = () => {
     <div className={styles.container}>
       <div className={styles.headline}>Регистрация</div>
 
-      <div className={styles.input}>
-        <TextInput
+      <div className={styles.inputs}>
+        <DataInput
           type="text"
           value={name}
           setValue={setName}
@@ -84,11 +89,7 @@ export const RegisterForm = () => {
           error={nameError}
         />
 
-        <ErrorField text={nameError} />
-      </div>
-
-      <div className={styles.input}>
-        <TextInput
+        <DataInput
           type="text"
           value={surname}
           setValue={setSurname}
@@ -96,11 +97,7 @@ export const RegisterForm = () => {
           error={surnameError}
         />
 
-        <ErrorField text={surnameError} />
-      </div>
-
-      <div className={styles.input}>
-        <TextInput
+        <DataInput
           type="text"
           value={email}
           setValue={setEmail}
@@ -108,11 +105,7 @@ export const RegisterForm = () => {
           error={emailError}
         />
 
-        <ErrorField text={emailError} />
-      </div>
-
-      <div className={styles.input}>
-        <TextInput
+        <DataInput
           type="password"
           value={password}
           setValue={setPassword}
@@ -120,19 +113,13 @@ export const RegisterForm = () => {
           error={passwordError}
         />
 
-        <ErrorField text={passwordError} />
-      </div>
-
-      <div className={styles.input}>
-        <TextInput
+        <DataInput
           type="password"
           value={repeatedPassword}
           setValue={setRepeatedPassword}
           placeholder="Пароль повторно"
           error={repeatedPasswordError}
         />
-
-        <ErrorField text={repeatedPasswordError} />
       </div>
 
       <Link to={routes.login} className={styles.link}>

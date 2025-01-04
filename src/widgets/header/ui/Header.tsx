@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { routes } from 'shared';
+import { routes } from '@shared';
 import styles from './header.module.scss';
 
 export const Header = (props) => {

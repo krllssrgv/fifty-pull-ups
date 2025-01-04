@@ -18,12 +18,5 @@ export default defineConfig({
     '@entities': path.resolve(__dirname, './src/entities/index'),
     '@shared': path.resolve(__dirname, './src/shared/index'),
     },
-  },
-  css: {
-    preprocessorOptions: {
-      scss: {
-        additionalData: `@use "./src/shared/config/colors.scss" as *;`,
-      },
-    },
-  },
+  }
 })
