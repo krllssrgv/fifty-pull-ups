@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { routes, DataInput, ConfirmButton } from '@shared';
-import { useLogin } from './useLogin';
+import { useLogin } from './use-login';
 import styles from './login-form.module.scss';
 
 export const LoginForm = () => {

@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { routes, DataInput, ConfirmButton } from '@shared';
-import { useRegistration } from './useRegistration';
+import { useRegistration } from './use-registration';
 import styles from './registration-form.module.scss';
 
 export const RegisterForm = () => {
