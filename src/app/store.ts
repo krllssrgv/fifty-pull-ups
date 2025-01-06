@@ -1,12 +1,13 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { configureStore } from '@reduxjs/toolkit';
+import { userReducer } from '@entities';
 
 export const store = configureStore({
-    reducer: {
-        user: userReducer
-    }
+  reducer: {
+    user: userReducer,
+  },
 });
 
 declare global {
-    type RootState = ReturnType<typeof store.getState>;
-    type AppDispatch = typeof store.dispatch;
+  type RootState = ReturnType<typeof store.getState>;
+  type AppDispatch = typeof store.dispatch;
 }

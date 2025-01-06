@@ -15,5 +15,5 @@ export { default as reverseGrip } from './assets/img/4.png';
 export { default as loading } from './assets/img/loading.png';
 export { default as turner } from './assets/img/turner.png';
 
-// context
-export { AppProvider, AppContext } from './context/app-provider';
+// store
+export { useAppDispatch, useAppSelector } from './store';

@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { fetchUser } from '@entities';
+import { useAppDispatch } from '@shared';
 import { URL } from '@shared';
 
 export const useLogin = () => {
@@ -8,6 +10,7 @@ export const useLogin = () => {
   const [password, setPassword] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [confuse, setConfuse] = useState(false);
+  const dispatch = useAppDispatch();
 
   const handleLogin = async () => {
     setEmailError('');
@@ -29,7 +32,7 @@ export const useLogin = () => {
         });
 
         if (response.ok) {
-          setLoading(false);
+          dispatch(fetchUser());
         } else {
           setLoading(false);
           if (response.status === 401) {

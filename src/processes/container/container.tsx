@@ -1,24 +1,32 @@
 import { useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
+import { selectUserAuth, fetchUser } from '@entities';
+import { useAppSelector, useAppDispatch } from '@shared';
 import styles from './container.module.scss';
 
 export const Container = () => {
-  const loading = false;
-  const loadingState = 'Загружаем информацию';
+  const authorized = useAppSelector(selectUserAuth);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     document.title = 'FPU';
   }, []);
 
+  useEffect(() => {
+    if (authorized === undefined) {
+      dispatch(fetchUser());
+    }
+  }, [dispatch, authorized]);
+
   return (
     <div className={styles.background}>
-      {loading ? (
+      {authorized !== undefined ? (
+        <Outlet />
+      ) : (
         <div className={styles.loading}>
-          <div className={styles.text}>{loadingState}</div>
+          <div className={styles.text}>Загружаем информацию</div>
           <div className={styles.circle}></div>
         </div>
-      ) : (
-        <Outlet />
       )}
     </div>
   );
