@@ -1,13 +1,11 @@
 // config
-export { routes, url } from './config/config';
+export { routes, URL } from './config/config';
+export const url = 'http://127.0.0.1:5000/';
 
 // ui
-export { Header } from './ui/header';
-export { TextInput } from './ui/text-input';
+export { DataInput } from './ui/data-input';
 export { ConfirmButton } from './ui/confirm-button';
-export { ErrorField } from './ui/error-field';
 export { Loading } from './ui/loading';
-export { AuthContainer } from './ui/auth-container';
 
 // assets
 export { default as narrowGrip } from './assets/img/1.png';
@@ -17,5 +15,5 @@ export { default as reverseGrip } from './assets/img/4.png';
 export { default as loading } from './assets/img/loading.png';
 export { default as turner } from './assets/img/turner.png';
 
-// context
-export { AppProvider, AppContext } from './context/app-provider';
+// store
+export { useAppDispatch, useAppSelector } from './store';

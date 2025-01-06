@@ -1,36 +1,32 @@
 .loading {
-    margin: 0 auto;
-    animation: round 2s linear infinite;
-    img {
-        width: 100%;
-    }
+  margin: 0 auto;
+  animation: round 2s linear infinite;
+  img {
+    width: 100%;
+  }
 }
-
 
 @keyframes round {
-    0% {
-        transform: rotate(0deg);
-    }
+  0% {
+    transform: rotate(0deg);
+  }
 
-    100% {
-        transform: rotate(360deg);
-    }
+  100% {
+    transform: rotate(360deg);
+  }
 }
-
 
 .max {
-    width: 256px;
-    height: 256px;
+  width: 256px;
+  height: 256px;
 }
-
 
 .med {
-    width: 128px;
-    height: 128px;
+  width: 128px;
+  height: 128px;
 }
 
-
 .min {
-    width: 64px;
-    height: 64px;
+  width: 64px;
+  height: 64px;
 }

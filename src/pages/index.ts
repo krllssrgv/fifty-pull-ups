@@ -1,8 +1,4 @@
-import { lazy } from "react";
-
-const MainPage = lazy(() => import('./main-page/main-page')),
-      ProfilePage = lazy(() => import('./profile-page/profile-page')),
-      RegistrationPage = lazy(() => import('./registration-page/registration-page')),
-      LoginPage = lazy(() => import('./login-page/login-page'));
-
-export { MainPage, ProfilePage, RegistrationPage, LoginPage };
+export { MainPage } from './main-page/main-page';
+export { ProfilePage } from './profile-page/profile-page';
+export { RegistrationPage } from './registration-page';
+export { LoginPage } from './login-page';

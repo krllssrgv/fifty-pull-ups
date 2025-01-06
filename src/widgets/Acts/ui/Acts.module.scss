@@ -1,100 +1,88 @@
-@import '../../../shared/styles/colors.scss';
-
-
 .container {
-    width: 96%;
-    max-width: 600px;
-    border: 3px solid $main-violet;
-    margin: 30px auto 20px auto;
-    border-radius: 10px;
-    padding: 8px;
-    font-weight: bold;
+  width: 96%;
+  max-width: 600px;
+  border: 3px solid var(--main);
+  margin: 30px auto 20px auto;
+  border-radius: 10px;
+  padding: 8px;
+  font-weight: bold;
 }
-
 
 .headline {
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 10px;
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 10px;
 }
-
 
 .slider {
-    width: 100%;
-    margin: 0 auto 15px auto;
-    position: relative;
+  width: 100%;
+  margin: 0 auto 15px auto;
+  position: relative;
 }
-
 
 .data {
-    margin-bottom: 4px;
-    font-size: 16px;
-    line-height: 16px;
+  margin-bottom: 4px;
+  font-size: 16px;
+  line-height: 16px;
 }
-
 
 .img {
-    width: 130px;
-    margin: 0 auto;
-    img {
-        width: 100%;
-    }
+  width: 130px;
+  margin: 0 auto;
+  img {
+    width: 100%;
+  }
 }
-
 
 .button {
-    line-height: 35px;
-    width: 160px;
-    font-size: 16px;
-    background-color: $main-violet;
-    border-radius: 5px;
-    text-align: center;
-    color: white;
-    user-select: none;
-    &:hover {
-        cursor: pointer;
-    }
+  line-height: 35px;
+  width: 160px;
+  font-size: 16px;
+  background-color: var(--main);
+  border-radius: 5px;
+  text-align: center;
+  color: white;
+  user-select: none;
+  &:hover {
+    cursor: pointer;
+  }
 }
-
 
 .turners {
-    position: absolute;
-    top: 130px;
-    width: 50px;
-    height: 50px;
-    padding: 10px;
-    background-color: $main-violet;
-    border-radius: 50%;
-    img{
-        width: 30px;
-        height: 30px;
-    }
-    &:hover {
-        cursor: pointer;
-    }
+  position: absolute;
+  top: 130px;
+  width: 50px;
+  height: 50px;
+  padding: 10px;
+  background-color: var(--main);
+  border-radius: 50%;
+  img {
+    width: 30px;
+    height: 30px;
+  }
+  &:hover {
+    cursor: pointer;
+  }
 }
-
 
 .left_btn {
-    left: 0;
-    padding-left: 7px;
-    padding-right: 13px;
-    img {
-        transform: rotate(180deg);
-    }
+  left: 0;
+  padding-left: 7px;
+  padding-right: 13px;
+  img {
+    transform: rotate(180deg);
+  }
 }
-
 
 .right_btn {
-    right: 0;
-    padding-left: 13px;
-    padding-right: 7px;
+  right: 0;
+  padding-left: 13px;
+  padding-right: 7px;
 }
 
-
 .disabled_btn {
-    background-color: grey;
-    &:hover {
-        cursor: default;
-    }
+  background-color: grey;
+  &:hover {
+    cursor: default;
+  }
 }
