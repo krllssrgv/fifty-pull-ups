@@ -9,7 +9,6 @@ export const useNavigation = () => {
   const authorized = useAppSelector(selectUserAuth);
 
   useEffect(() => {
-    console.log(authorized);
     switch (authorized) {
       case undefined: {
         if (
