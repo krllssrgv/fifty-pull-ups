@@ -2,7 +2,6 @@ export type User = {
   name: string;
   surname: string;
   email: string;
-  confirmed: string;
   progress: string;
   finish: string;
   isSuccess: string;

@@ -1,3 +1,7 @@
 export { userReducer } from './user-slice';
-export { selectUserAuth } from './user-selectors';
+export {
+  selectUserAuth,
+  selectUserData,
+  selectUserActs,
+} from './user-selectors';
 export { fetchUser } from './fetch-user';

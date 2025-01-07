@@ -1,0 +1,34 @@
+.progress {
+  width: 100%;
+  height: 70px;
+  padding: 0 10px;
+  background-color: var(--main);
+  border-radius: 8px;
+  color: #fff;
+  user-select: none;
+  align-self: start;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 10px;
+}
+
+.title {
+  font-size: 18px;
+  line-height: 20px;
+  font-weight: bold;
+}
+
+.line {
+  height: 10px;
+  width: 100%;
+  border-radius: 10px;
+  background-color: var(--grey);
+}
+
+.done {
+  height: 100%;
+  border-radius: 10px;
+  background: var(--grad);
+}

@@ -9,7 +9,6 @@ const initialState: UserState = {
     name: '',
     surname: '',
     email: '',
-    confirmed: '',
     progress: '',
     finish: '',
     isSuccess: '',
@@ -39,7 +38,6 @@ const userSlice = createSlice({
           state.user.name = action.payload.name;
           state.user.surname = action.payload.surname;
           state.user.email = action.payload.email;
-          state.user.confirmed = action.payload.confirmed;
           state.user.progress = action.payload.progress;
           state.user.finish = action.payload.finish;
           state.user.isSuccess = String(action.payload.success);

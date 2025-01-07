@@ -1,65 +1,21 @@
 import { useState, useEffect } from 'react';
-import { Week, Acts, Header } from '@widgets';
+import { Week, Acts, Progress, Account } from '@widgets';
 import { useNavigation } from '@features';
+import { selectUserData, selectUserActs } from '@entities';
+import { useAppSelector } from '@shared';
 import styles from './main-page.module.scss';
 
 export const MainPage = () => {
   const [displayedAct, setDisplayedAct] = useState(0);
   const [page, setPage] = useState(0);
+  const user = useAppSelector(selectUserData);
+  const acts = useAppSelector(selectUserActs);
 
   useEffect(() => {
     document.title = 'Текущая неделя';
   }, []);
 
   useNavigation();
-
-  // useEffect(() => {
-  //   document.title = 'Главная';
-
-  //   async function getUserData() {
-  //     const response = await fetch(`${url}api/user/user`, {
-  //       method: 'GET',
-  //       credentials: 'include',
-  //       headers: {
-  //         Accept: 'application/json',
-  //       },
-  //     });
-
-  //     if (response.status === 200) {
-  //       const json = await response.json();
-  //       dispatch({
-  //         type: 'SET_USER',
-  //         payload: {
-  //           name: json.name,
-  //           surname: json.surname,
-  //           email: json.email,
-  //           confirmed: json.confirmed,
-  //           progress: json.progress,
-  //           finish: json.finish,
-  //           isSuccess: String(json.success),
-  //         },
-  //       });
-
-  //       dispatch({
-  //         type: 'SET_ACTS',
-  //         payload: {
-  //           types: json.finish ? '' : json.types,
-  //           days: json.finish ? '' : json.days,
-  //           week: json.finish ? '' : json.current_week,
-  //         },
-  //       });
-
-  //       dispatch({
-  //         type: 'SET_DATA_LOADED',
-  //         payload: true,
-  //       });
-  //     } else if (response.status === 401) {
-  //       navigate(routes.login);
-  //     }
-  //   }
-
-  //   if (!state.isDataLoaded) getUserData();
-  // }, []);
 
   // const postDone = (x) => {
   //   async function setDone() {
@@ -113,38 +69,30 @@ export const MainPage = () => {
   //   }
   // }, [state.acts.days]);
 
-  // const render = () => {
-  //   if (state.isDataLoaded) {
-  //     if (state.user.finish) {
-  //       return (
-  //         <>
-  //           <Header progress={state.user.progress} name={state.user.name} />
-  //           <div className={styles.finish}>Программа выполнена!</div>
-  //         </>
-  //       );
-  //     } else {
-  //       return (
-  //         <>
-  //           <Header progress={state.user.progress} name={state.user.name} />
-  //           <Week setDisplayedAct={setDisplayedAct} setPage={setPage} />
-  //           <Acts
-  //             day={displayedAct ? state.acts.days[displayedAct - 1] : null}
-  //             types={state.acts.types}
-  //             postDone={'postDone'}
-  //             page={page}
-  //             setPage={setPage}
-  //           />
-  //         </>
-  //       );
-  //     }
-  //   } else {
-  //     return (
-  //       <div className={styles.loading}>
-  //         <Loading size="max" />
-  //       </div>
-  //     );
-  //   }
-  // };
+  if (user.finish) {
+    return (
+      <>
+        <Account name={user.name} surname={user.surname} />
+        <div className={styles.finish}>Программа выполнена!</div>
+      </>
+    );
+  } else {
+    return (
+      <div className={styles.container}>
+        <div className={styles.header}>
+          <Account name={user.name} surname={user.surname} />
+          <Progress progress={user.progress} />
+        </div>
 
-  return <></>;
+        <Week setDisplayedAct={setDisplayedAct} setPage={setPage} />
+        {/* <Acts
+          day={displayedAct ? acts.days[displayedAct - 1] : null}
+          types={acts.types}
+          postDone={'postDone'}
+          page={page}
+          setPage={setPage}
+        /> */}
+      </div>
+    );
+  }
 };

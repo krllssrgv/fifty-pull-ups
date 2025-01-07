@@ -38,7 +38,7 @@ export const Acts = (props) => {
       return <></>;
     } else {
       return (
-        <ConfirmButton text="Выполнить" func={() => postDone(day.number)} />
+        <ConfirmButton text="Выполнить" onClick={() => postDone(day.number)} />
       );
     }
   };
