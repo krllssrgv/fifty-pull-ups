@@ -15,8 +15,8 @@ const initialState: UserState = {
     s: '',
   },
   acts: {
-    types: '',
-    days: '',
+    types: [],
+    days: [],
     week: '',
   },
 };
@@ -27,6 +27,9 @@ const userSlice = createSlice({
   reducers: {
     resetUser: (state: UserState) => {
       Object.assign(state, initialState);
+    },
+    setSuccess: (state: UserState, action: PayloadAction<string>) => {
+      state.user.isSuccess = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -41,8 +44,12 @@ const userSlice = createSlice({
           state.user.progress = action.payload.progress;
           state.user.finish = action.payload.finish;
           state.user.isSuccess = String(action.payload.success);
-          state.acts.types = action.payload.finish ? '' : action.payload.types;
-          state.acts.days = action.payload.finish ? '' : action.payload.days;
+
+          if (!action.payload.finish) {
+            state.acts.days = action.payload.days;
+            state.acts.types = action.payload.types;
+          }
+
           state.acts.week = action.payload.finish
             ? ''
             : action.payload.current_week;
@@ -56,5 +63,5 @@ const userSlice = createSlice({
   },
 });
 
-export const { resetUser } = userSlice.actions;
+export const { resetUser, setSuccess } = userSlice.actions;
 export const userReducer = userSlice.reducer;

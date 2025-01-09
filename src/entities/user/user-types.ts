@@ -8,9 +8,15 @@ export type User = {
   s: string;
 };
 
+export type Day = {
+  number: number;
+  done: boolean;
+  acts: any;
+};
+
 export type Acts = {
-  types: string;
-  days: string;
+  types: string[];
+  days: Day[];
   week: string;
 };
 
@@ -28,7 +34,7 @@ export type UserJson = {
   progress: string;
   finish: string;
   success: string;
-  types: string;
-  days: string;
+  types: string[];
+  days: Day[];
   current_week: string;
 };

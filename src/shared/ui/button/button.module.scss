@@ -1,0 +1,23 @@
+.button {
+  background-color: var(--grey);
+  width: 100%;
+  border-radius: 10px;
+  font-size: 16px;
+  user-select: none;
+  border: none;
+  height: 40px;
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.done {
+  background-color: var(--green);
+  color: #fff;
+}
+
+.active {
+  background: var(--grad);
+  color: #fff;
+}

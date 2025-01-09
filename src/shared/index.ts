@@ -6,6 +6,7 @@ export const url = 'http://127.0.0.1:5000/';
 export { DataInput } from './ui/data-input';
 export { ConfirmButton } from './ui/confirm-button';
 export { Loading } from './ui/loading';
+export { Button } from './ui/button';
 
 // assets
 export { default as narrowGrip } from './assets/img/1.png';

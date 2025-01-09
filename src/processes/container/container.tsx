@@ -9,10 +9,6 @@ export const Container = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    document.title = 'FPU';
-  }, []);
-
-  useEffect(() => {
     if (authorized === undefined) {
       dispatch(fetchUser());
     }
