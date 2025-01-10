@@ -31,6 +31,9 @@ const userSlice = createSlice({
     setSuccess: (state: UserState, action: PayloadAction<string>) => {
       state.user.isSuccess = action.payload;
     },
+    setDayAsDone: (state: UserState, action: PayloadAction<number>) => {
+      state.acts.days[action.payload].done = true;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -63,5 +66,5 @@ const userSlice = createSlice({
   },
 });
 
-export const { resetUser, setSuccess } = userSlice.actions;
+export const { resetUser, setSuccess, setDayAsDone } = userSlice.actions;
 export const userReducer = userSlice.reducer;

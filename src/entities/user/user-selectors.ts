@@ -13,6 +13,7 @@ export const selectUserData = createSelector(
     surname: user.user.surname,
     progress: user.user.progress,
     finish: user.user.finish,
+    isSuccess: user.user.isSuccess,
   })
 );
 
@@ -29,11 +30,18 @@ export const selectUserForWeek = createSelector(
   [(state: RootState) => state.user],
   (user: UserState) => ({
     doneDays: [
-      user.acts.days[0].done,
-      user.acts.days[1].done,
-      user.acts.days[2].done,
+      user.acts.days[0]?.done,
+      user.acts.days[1]?.done,
+      user.acts.days[2]?.done,
     ],
     isSuccess: user.user.isSuccess,
     week: user.acts.week,
+  })
+);
+
+export const selectUserForActs = createSelector(
+  [(state: RootState) => state.user],
+  (user: UserState) => ({
+    acts: user.acts,
   })
 );

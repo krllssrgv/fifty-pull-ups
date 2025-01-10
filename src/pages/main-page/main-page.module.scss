@@ -9,6 +9,21 @@
   grid-template-rows: 140px;
   grid-template-columns: 300px 1fr;
   gap: 20px;
+
+  & > * {
+    align-self: start;
+  }
+}
+
+.main {
+  display: grid;
+  grid-template-rows: auto;
+  grid-template-columns: 250px 1fr;
+  gap: 20px;
+
+  & > * {
+    align-self: start;
+  }
 }
 
 .finish {
@@ -26,7 +41,13 @@
   .header {
     display: flex;
     flex-direction: column;
-    gap: 30px;
-    margin-bottom: 10px;
+    gap: 15px;
+    margin-bottom: 40px;
+  }
+
+  .main {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
   }
 }

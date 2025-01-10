@@ -12,10 +12,9 @@ import styles from './week.module.scss';
 
 type Props = {
   setDisplayedAct: Dispatch<SetStateAction<number>>;
-  setPage: Dispatch<SetStateAction<number>>;
 };
 
-export const Week = ({ setDisplayedAct, setPage }: Props) => {
+export const Week = ({ setDisplayedAct }: Props) => {
   const { doneDays, isSuccess, week } = useAppSelector(selectUserForWeek);
   const [successText, setSuccessText] = useState('');
   const dispatch = useAppDispatch();
@@ -103,7 +102,6 @@ export const Week = ({ setDisplayedAct, setPage }: Props) => {
         <Button
           onClick={() => {
             setDisplayedAct(1);
-            setPage(0);
           }}
           done={doneDays[0]}
         >
@@ -112,7 +110,6 @@ export const Week = ({ setDisplayedAct, setPage }: Props) => {
         <Button
           onClick={() => {
             setDisplayedAct(2);
-            setPage(0);
           }}
           done={doneDays[1]}
         >
@@ -121,7 +118,6 @@ export const Week = ({ setDisplayedAct, setPage }: Props) => {
         <Button
           onClick={() => {
             setDisplayedAct(3);
-            setPage(0);
           }}
           done={doneDays[2]}
         >

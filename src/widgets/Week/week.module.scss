@@ -1,7 +1,7 @@
 .week {
   width: 100%;
   background-color: var(--main);
-  margin: 0 auto 30px;
+  margin: 0 auto;
   border-radius: 8px;
   padding: 8px;
   color: #fff;
@@ -18,10 +18,7 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-
-  & > * {
-    width: 200px;
-  }
+  gap: 15px;
 }
 
 .success {
@@ -58,21 +55,9 @@
 }
 
 @media screen and (max-width: 768px) {
-  .week {
-    margin-bottom: 20px;
-  }
-
   .headline {
     font-size: 21px;
     line-height: 21px;
-  }
-
-  .acts {
-    gap: 15px;
-
-    & > * {
-      width: 100%;
-    }
   }
 
   .buttons > * {

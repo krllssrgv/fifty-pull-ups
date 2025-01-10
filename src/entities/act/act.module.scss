@@ -1,0 +1,19 @@
+.container {
+  width: 130px;
+  height: 130px;
+  background-color: var(--main);
+  padding: 5px;
+  border-radius: 5px;
+  color: #fff;
+}
+
+.number {
+  font-weight: bold;
+  margin-bottom: 14px;
+  font-size: 20px;
+}
+
+.data {
+  margin-bottom: 2px;
+  font-size: 16px;
+}
