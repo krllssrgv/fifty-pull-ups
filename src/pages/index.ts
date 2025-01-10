@@ -1,4 +1,3 @@
-export { MainPage } from './main-page/main-page';
-export { ProfilePage } from './profile-page/profile-page';
+export { MainPage } from './main-page';
 export { RegistrationPage } from './registration-page';
 export { LoginPage } from './login-page';

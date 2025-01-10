@@ -2,16 +2,23 @@ export type User = {
   name: string;
   surname: string;
   email: string;
-  confirmed: string;
   progress: string;
   finish: string;
   isSuccess: string;
   s: string;
 };
 
+export type Day = {
+  number: number;
+  done: boolean;
+  acts: number[];
+};
+
+type Types = 'reverse' | 'wide' | 'narrow' | 'straight';
+
 export type Acts = {
-  types: string;
-  days: string;
+  types: Types[];
+  days: Day[];
   week: string;
 };
 
@@ -29,7 +36,7 @@ export type UserJson = {
   progress: string;
   finish: string;
   success: string;
-  types: string;
-  days: string;
+  types: Types[];
+  days: Day[];
   current_week: string;
 };

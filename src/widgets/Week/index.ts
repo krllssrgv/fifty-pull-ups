@@ -1,1 +1,1 @@
-export { Week } from './ui/week';
+export { Week } from './week';

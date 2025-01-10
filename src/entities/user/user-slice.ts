@@ -9,15 +9,14 @@ const initialState: UserState = {
     name: '',
     surname: '',
     email: '',
-    confirmed: '',
     progress: '',
     finish: '',
     isSuccess: '',
     s: '',
   },
   acts: {
-    types: '',
-    days: '',
+    types: [],
+    days: [],
     week: '',
   },
 };
@@ -29,6 +28,12 @@ const userSlice = createSlice({
     resetUser: (state: UserState) => {
       Object.assign(state, initialState);
     },
+    setSuccess: (state: UserState, action: PayloadAction<string>) => {
+      state.user.isSuccess = action.payload;
+    },
+    setDayAsDone: (state: UserState, action: PayloadAction<number>) => {
+      state.acts.days[action.payload].done = true;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -39,12 +44,15 @@ const userSlice = createSlice({
           state.user.name = action.payload.name;
           state.user.surname = action.payload.surname;
           state.user.email = action.payload.email;
-          state.user.confirmed = action.payload.confirmed;
           state.user.progress = action.payload.progress;
           state.user.finish = action.payload.finish;
           state.user.isSuccess = String(action.payload.success);
-          state.acts.types = action.payload.finish ? '' : action.payload.types;
-          state.acts.days = action.payload.finish ? '' : action.payload.days;
+
+          if (!action.payload.finish) {
+            state.acts.days = action.payload.days;
+            state.acts.types = action.payload.types;
+          }
+
           state.acts.week = action.payload.finish
             ? ''
             : action.payload.current_week;
@@ -58,5 +66,5 @@ const userSlice = createSlice({
   },
 });
 
-export const { resetUser } = userSlice.actions;
+export const { resetUser, setSuccess, setDayAsDone } = userSlice.actions;
 export const userReducer = userSlice.reducer;

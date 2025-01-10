@@ -1,0 +1,66 @@
+.week {
+  width: 100%;
+  background-color: var(--main);
+  margin: 0 auto;
+  border-radius: 8px;
+  padding: 8px;
+  color: #fff;
+}
+
+.headline {
+  font-size: 24px;
+  line-height: 24px;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.acts {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.success {
+  width: 100%;
+  background-color: var(--grey);
+  color: #000;
+  margin-top: 20px;
+  border-radius: 8px;
+  padding: 6px;
+}
+
+.question {
+  font-size: 15px;
+  line-height: 15px;
+  margin-bottom: 8px;
+}
+
+.buttons {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+
+  & > * {
+    width: 150px;
+  }
+}
+
+.loading {
+  height: 50px;
+  line-height: 50px;
+  font-weight: bold;
+  font-size: 17px;
+}
+
+@media screen and (max-width: 768px) {
+  .headline {
+    font-size: 21px;
+    line-height: 21px;
+  }
+
+  .buttons > * {
+    width: 100%;
+  }
+}
