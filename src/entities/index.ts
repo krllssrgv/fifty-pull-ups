@@ -8,6 +8,7 @@ export {
   setSuccess,
   selectUserForActs,
   setDayAsDone,
+  resetUser,
 } from './user';
 
 export type { Day } from './user';

@@ -8,7 +8,7 @@ type Props = {
 };
 
 export const Account = ({ name, surname }: Props) => {
-  const { onMore, containerClasses, buttonClasses } = useMore();
+  const { onMore, containerClasses, buttonClasses, onLogout } = useMore();
 
   return (
     <div className={styles.profile}>
@@ -22,7 +22,11 @@ export const Account = ({ name, surname }: Props) => {
         <div className={classNames(...buttonClasses)}>{'<'}</div>
       </div>
 
-      <div className={classNames(...containerClasses)}></div>
+      <div className={classNames(...containerClasses)}>
+        <button className={styles.logout} onClick={onLogout}>
+          Выйти
+        </button>
+      </div>
     </div>
   );
 };

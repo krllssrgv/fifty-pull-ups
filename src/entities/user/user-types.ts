@@ -5,7 +5,6 @@ export type User = {
   progress: string;
   finish: string;
   isSuccess: string;
-  s: string;
 };
 
 export type Day = {

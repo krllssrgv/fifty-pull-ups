@@ -1,4 +1,4 @@
-export { userReducer, setSuccess, setDayAsDone } from './user-slice';
+export { userReducer, setSuccess, setDayAsDone, resetUser } from './user-slice';
 export {
   selectUserAuth,
   selectUserData,

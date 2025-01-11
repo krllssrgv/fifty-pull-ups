@@ -12,7 +12,6 @@ const initialState: UserState = {
     progress: '',
     finish: '',
     isSuccess: '',
-    s: '',
   },
   acts: {
     types: [],
