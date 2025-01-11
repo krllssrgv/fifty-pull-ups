@@ -1,6 +1,7 @@
 import type { Day } from '@entities';
-import { selectUserForActs, setDayAsDone, Act, setSuccess } from '@entities';
-import { ConfirmButton, URL, useAppSelector, useAppDispatch } from '@shared';
+import { Act } from '@entities';
+import { ConfirmButton } from '@shared';
+import { useActs } from './use-acts';
 import styles from './acts.module.scss';
 
 type Props = {
@@ -8,41 +9,7 @@ type Props = {
 };
 
 export const Acts = ({ day }: Props) => {
-  const { acts } = useAppSelector(selectUserForActs);
-  const dispatch = useAppDispatch();
-
-  const properties = {
-    straight: 'Прямой',
-    narrow: 'Узкий',
-    wide: 'Широкий',
-    reverse: 'Обратный',
-  };
-
-  const handleReadiness = async (x: number) => {
-    try {
-      const response = await fetch(`${URL}api/act/set_day_as_done`, {
-        method: 'POST',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ set_day: x }),
-      });
-
-      if (response.ok) {
-        dispatch(setDayAsDone(x - 1));
-        if (
-          (acts.days[0].done && acts.days[1].done) ||
-          (acts.days[0].done && acts.days[2].done) ||
-          (acts.days[1].done && acts.days[2].done)
-        ) {
-          dispatch(setSuccess('0'));
-        }
-      }
-    } catch {
-      //
-    }
-  };
+  const { acts, properties, handleReadiness } = useActs();
 
   const renderButton = () => {
     if (day && day.done) {

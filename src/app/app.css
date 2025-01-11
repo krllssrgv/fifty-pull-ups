@@ -1,13 +1,13 @@
 @font-face {
   font-family: 'Ubuntu';
-  src: url('../shared/assets/fonts/Ubuntu-Regular.ttf');
+  src: url('../shared/fonts/Ubuntu-Regular.ttf');
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Ubuntu';
-  src: url('../shared/assets/fonts/Ubuntu-Medium.ttf');
+  src: url('../shared/fonts/Ubuntu-Medium.ttf');
   font-weight: bold;
   font-style: normal;
 }
